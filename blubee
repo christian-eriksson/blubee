@@ -1,0 +1,33 @@
+#!/bin/sh
+command=$1
+
+print_help() {
+    echo "usage: blubee <command>\n"
+    echo "commands:"
+    echo "\t* backup"
+}
+
+backup() {
+    destination=$BACKUP_DESTINATION
+    sources=$BACKUP_SOURCES
+    if [ -f "$EXCLUDE" ]; then
+        exclude=${EXCLUDE:+"-e $EXCLUDE"}
+    else
+       if [ -n "$EXCLUDE" ]; then
+           echo "Exclude file '$EXCLUDE' does not exist. It will be ignored."
+       fi
+   fi
+    ./backup.sh $exclude $sources $destination
+}
+
+config_file=./blubee.conf
+. $config_file
+
+case "$command" in
+    backup)
+        backup;;
+    *)
+        print_help
+        exit 1
+        ;;
+esac
