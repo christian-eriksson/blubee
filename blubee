@@ -1,10 +1,10 @@
 #!/bin/sh
-command=$1
-
 print_help() {
-    echo "usage: blubee <command>\n"
-    echo "commands:"
+    echo "usage: blubee [options] <command>\n"
+    echo "command:"
     echo "\t* backup"
+    echo "\noptions:"
+    echo "\t-c <config-file>\tpath to custom config"
 }
 
 backup() {
@@ -21,8 +21,23 @@ backup() {
 }
 
 config_file=./blubee.conf
+
+while getopts ":c:h" option; do
+    case "${option}" in
+        c)
+            config_file=$OPTARG;;
+        :)
+            echo "Missing argument for option '$OPTARG'"
+            exit 1
+            ;;
+        ?)
+            echo "Unrecognized option '$OPTARG'";;
+    esac
+done
+
 . $config_file
 
+command=$(echo $@ | cut -d' ' -f$OPTIND)
 case "$command" in
     backup)
         backup;;
