@@ -5,6 +5,7 @@ print_help() {
     echo "\t* backup"
     echo "\noptions:"
     echo "\t-c <config-file>\tpath to custom config"
+    echo "\t-h\t\t\tprint this help"
 }
 
 backup() {
@@ -26,6 +27,10 @@ while getopts ":c:h" option; do
     case "${option}" in
         c)
             config_file=$OPTARG;;
+        h)
+            print_help
+            exit 1
+            ;;
         :)
             echo "Missing argument for option '$OPTARG'"
             exit 1
