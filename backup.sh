@@ -1,5 +1,7 @@
 #!/bin/sh
 
+. ./string_utils.sh
+
 while getopts ":e:s:d:r:" option; do
     case "${option}" in
         e)
@@ -33,11 +35,14 @@ if [ -z "$destination_root" ]; then
     exit 1
 fi
 
+source_root=$(trim_right_slash $source_root)
+destination_root=$(trim_right_slash $destination_root)
+
 datetime="$(date '+%Y%m%d_%H%M%S')"
 
 sources=""
 for source in $source_paths; do
-    sources="$sources $source_root/$source"
+    sources="$sources $source_root/$(trim_right_slash $(trim_left_slash $source))"
 done
 
 backup_path="$destination_root/$datetime"

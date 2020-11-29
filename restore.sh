@@ -1,5 +1,7 @@
 #!/bin/sh
 
+. ./string_utils.sh
+
 datetime_of_snapshot="latest"
 
 while getopts ":r:d:s:" option; do
@@ -28,6 +30,10 @@ if [ -z "$backup_source_path" ]; then
     echo "Source path for backups is missing, use option -b <path>."
     exit 1
 fi
+
+backup_source_path=$(trim_right_slash $backup_source_path)
+datetime_of_snapshot=$(trim_right_slash $(trim_left_slash $datetime_of_snapshot))
+restore_path=$(trim_right_slash $restore_path)
 
 rsync -av --delete --backup --backup-dir "~/temp/saved/backups" "$backup_source_path/$datetime_of_snapshot/" "$restore_path"
 
