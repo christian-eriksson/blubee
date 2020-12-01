@@ -1,0 +1,10 @@
+#!/bin/bash
+
+bbe-up() {
+	  thisdir=$(cd $(dirname ${BASH_SOURCE[0]}) && pwd)
+	  export BBE=$(cd $thisdir && pwd)
+      pushd $BBE
+	  echo "Environment set up for  development in $BBE"
+}
+
+
