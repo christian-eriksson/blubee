@@ -1,32 +1,31 @@
 #!/bin/sh
+
+. ./jq_utils.sh
+. ./string_utils.sh
+
 print_help() {
-    echo "usage: blubee [options] <command>\n"
+    echo "usage: blubee -b <backup.json> [options] <command>\n"
     echo "command:"
-    echo "\t* backup"
+    echo "  backup"
+    echo "\tCreate backups as described by <backup.json>.\n"
+    echo "  restore <dest>"
+    echo "\tProvide a destination to restore to (from <backup.json>."
     echo "\noptions:"
+    echo "\t-b <backup-json>\tpath to backup config"
     echo "\t-c <config-file>\tpath to custom config"
     echo "\t-h\t\t\tprint this help"
 }
 
-backup() {
-    destination=$BACKUP_DESTINATION
-    sources=$BACKUP_SOURCES
-    if [ -f "$EXCLUDE" ]; then
-        exclude=${EXCLUDE:+"-e $EXCLUDE"}
-    else
-       if [ -n "$EXCLUDE" ]; then
-           echo "Exclude file '$EXCLUDE' does not exist. It will be ignored."
-       fi
-   fi
-    ./backup.sh $exclude $sources $destination
-}
 
 config_file=./blubee.conf
+. $config_file
 
-while getopts ":c:h" option; do
+while getopts ":c:hb:" option; do
     case "${option}" in
         c)
             config_file=$OPTARG;;
+        b)
+            backup_json_file=$OPTARG;;
         h)
             print_help
             exit 1
@@ -40,14 +39,100 @@ while getopts ":c:h" option; do
     esac
 done
 
-. $config_file
-
 command=$(echo $@ | cut -d' ' -f$OPTIND)
+if [ -z "$command" ]; then
+    echo "No command specified.\n"
+    print_help
+    exit 1
+fi
+
+if [ -z "$backup_json_file" ]; then
+    echo "No backup json specified, use the -b option.\n"
+    print_help
+    exit 1
+fi
+
+backup() {
+    backup_json="$1"
+    backup_configs=$(get_json_element '.backup_configs' "$backup_json")
+
+    destination_path=$(get_json_element ".destination_path" "$backup_json")
+    [ -z "$destination_path" ] && echo "No destination path in 'backup.json'!" && exit 1
+    destination_path=$(trim_right_slash "$(dequote_string "$destination_path")")
+
+    configs_count=$(list_length "$backup_configs")
+    config_index=0
+    while [ "$config_index" -lt "$configs_count" ]; do
+        config=$(get_list_item "$backup_configs" "$config_index")
+
+        config_name=$(get_json_element ".name" "$config")
+        [ -z "$config_name" ] && echo "Can not have config without name in 'backup.json'" && exit 1
+        config_name=$(trim_left_slash "$(dequote_string "$config_name")")
+
+        source_root=$(get_json_element ".root" "$config")
+        [ -z "$source_root" ] && echo "No source root for config '$config_name'!" && exit 1
+        source_root=$(trim_right_slash "$(dequote_string "$source_root")")
+
+        sources_list=$(get_json_element ".paths" "$config")
+        [ -z "sources_list" ] && echo "No source paths for '$config_name'!" && exit 1
+        sources=$(extract_json_list "$sources_list")
+        [ -z "$sources" ] && echo "No sources in config '$config_name'!" && exit 1
+
+        ./backup.sh -r "$source_root" -s "$sources"  -d "$destination_path/$config_name"
+        config_index=$((config_index + 1))
+    done
+}
+
+restore() {
+    backup_json="$1"
+
+    restore_path="$2"
+    backups_path=$(get_json_element '.destination_path' "$backup_json")
+    [ -z "$backups_path" ] && echo "No destination_path in 'backup.json'!" && exit 1
+    backups_path=$(trim_right_slash "$(dequote_string "$backups_path")")
+
+    backup_configs=$(get_json_element '.backup_configs' "$backup_json")
+    configs_count=$(list_length "$backup_configs")
+    config_index=0
+    while [ "$config_index" -lt "$configs_count" ]; do
+        config=$(get_list_item "$backup_configs" "$config_index")
+
+        config_name=$(get_json_element ".name" "$config")
+        [ -z "$config_name" ] && echo "Can not have config without name in 'backup.json'" && exit 1
+        config_name=$(trim_left_slash "$(dequote_string "$config_name")")
+
+        source_root=$(get_json_element ".root" "$config")
+        [ -z "$source_root" ] && echo "No source root for config '$config_name'!" && exit 1
+        source_root=$(trim_right_slash "$(dequote_string "$source_root")")
+
+        sources_list=$(get_json_element ".paths" "$config")
+        [ -z "sources_list" ] && echo "No source paths for '$config_name'!" && exit 1
+        sources=$(extract_json_list "$sources_list")
+        [ -z "$sources" ] && echo "No sources in config '$config_name'!" && exit 1
+
+        ./restore.sh -r "$restore_path" -s "$backups_path/$config_name" -p "$sources"
+        config_index=$((config_index + 1))
+    done
+}
+
+input_index=$(expr $OPTIND + 1)
+backup_config_json=$(cat $backup_json_file)
 case "$command" in
     backup)
-        backup;;
+        backup "$backup_config_json"
+        ;;
+    restore)
+        [ $input_index -le $# ] && command_input=$(echo $@ | cut -d' ' -f$input_index)
+        destination_path=$command_input
+        [ -z $destination_path ] && echo "No destination path provided to restore command!" && exit 1
+        destination_path=$(trim_right_slash "$destination_path")
+
+        restore "$backup_config_json" "$destination_path"
+        ;;
     *)
+        echo "Unrecognized command '$command'.\n"
         print_help
         exit 1
         ;;
 esac
+
