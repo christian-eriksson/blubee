@@ -4,10 +4,12 @@
 
 datetime_of_snapshot="latest"
 
-while getopts ":r:d:s:" option; do
+while getopts ":r:p:d:s:" option; do
     case "${option}" in
         r)
-            restore_path=${OPTARG};;
+            restore_root=${OPTARG};;
+        p)
+            restore_paths=${OPTARG};;
         d)
             datetime_of_snapshot=${OPTARG};;
         s)
@@ -21,7 +23,7 @@ while getopts ":r:d:s:" option; do
     esac
 done
 
-if [ -z "$restore_path" ]; then
+if [ -z "$restore_root" ]; then
     echo "Root for restore path is missing, use option -r <path>."
     exit 1
 fi
@@ -33,7 +35,13 @@ fi
 
 backup_source_path=$(trim_right_slash "$backup_source_path")
 datetime_of_snapshot=$(trim_right_slash "$(trim_left_slash "$datetime_of_snapshot")")
-restore_path=$(trim_right_slash "$restore_path")
+restore_root=$(trim_right_slash "$restore_root")
 
-rsync -aE --progress --delete --backup --backup-dir "~/temp/saved/backups" "$backup_source_path/$datetime_of_snapshot/" "$restore_path"
+for restore_path in $restore_paths; do
+    source_suffix=$(trim_right_slash "$(trim_left_slash "$restore_path")")
+    restore_path_suffix=$(trim_right_slash "$(trim_to_first_right_slash "$source_suffix")")
+    rsync -aE --progress --delete --backup --backup-dir "/home/christian/temp/saved/backups" "$backup_source_path/$datetime_of_snapshot/$source_suffix" "$restore_root/$restore_path_suffix"
+done
+
+
 
