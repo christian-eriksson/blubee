@@ -40,24 +40,22 @@ destination_root=$(trim_right_slash $destination_root)
 
 datetime="$(date '+%Y%m%d_%H%M%S')"
 
-sources=""
-for source in $source_paths; do
-    sources="$sources $source_root/$(trim_right_slash $(trim_left_slash $source))"
-done
-
 backup_path="$destination_root/$datetime"
 mkdir -p $backup_path
 latest_link="$destination_root/latest"
 
 [ ! -L $latest_link ] && echo "First backup! Link to latest previous backup does not exist, it will be created."
 
-rsync_command="rsync -av --delete --link-dest $latest_link"
+for source in $source_paths; do
+    source_suffix=$(trim_right_slash "$(trim_left_slash "$source")")
+    backup_path_suffix=$(trim_right_slash "$(trim_to_first_right_slash "$source")")
 
-[ -n "$exclude_pattern" ] && rsync_command="$rsync_command --exclude-from $exclude_pattern"
+    rsync_command="rsync -aE --progress --delete --link-dest $latest_link/$backup_path_suffix"
+    [ -n "$exclude_pattern" ] && rsync_command="$rsync_command --exclude-from $exclude_pattern"
+    rsync_command="$rsync_command $source_root/$source_suffix $backup_path/$backup_path_suffix"
 
-rsync_command="$rsync_command $sources $backup_path"
-
-eval $rsync_command
+    eval $rsync_command
+done
 
 rm -rf $latest_link
 ln -s $backup_path $latest_link
