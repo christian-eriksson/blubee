@@ -31,9 +31,9 @@ if [ -z "$backup_source_path" ]; then
     exit 1
 fi
 
-backup_source_path=$(trim_right_slash $backup_source_path)
-datetime_of_snapshot=$(trim_right_slash $(trim_left_slash $datetime_of_snapshot))
-restore_path=$(trim_right_slash $restore_path)
+backup_source_path=$(trim_right_slash "$backup_source_path")
+datetime_of_snapshot=$(trim_right_slash "$(trim_left_slash "$datetime_of_snapshot")")
+restore_path=$(trim_right_slash "$restore_path")
 
-rsync -av --delete --backup --backup-dir "~/temp/saved/backups" "$backup_source_path/$datetime_of_snapshot/" "$restore_path"
+rsync -aE --progress --delete --backup --backup-dir "~/temp/saved/backups" "$backup_source_path/$datetime_of_snapshot/" "$restore_path"
 
