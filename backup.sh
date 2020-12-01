@@ -48,7 +48,7 @@ latest_link="$destination_root/latest"
 
 for source in $source_paths; do
     source_suffix=$(trim_right_slash "$(trim_left_slash "$source")")
-    backup_path_suffix=$(trim_right_slash "$(trim_to_first_right_slash "$source")")
+    backup_path_suffix=$(trim_right_slash "$(trim_to_first_right_slash "$source_suffix")")
 
     rsync_command="rsync -aE --progress --delete --link-dest $latest_link/$backup_path_suffix"
     [ -n "$exclude_pattern" ] && rsync_command="$rsync_command --exclude-from $exclude_pattern"
