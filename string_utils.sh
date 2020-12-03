@@ -10,6 +10,12 @@ trim_left_slash() {
     echo ${string#/}
 }
 
+dequote_string() {
+    string="$*"
+    string=${string#\"}
+    echo ${string%\"}
+}
+
 trim_to_first_right_slash() {
     string="$*"
     while :; do
