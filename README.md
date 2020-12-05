@@ -112,3 +112,13 @@ blubee -b <path-to-backup.json> restore
 
 The data will be restored to the root+path combinations specified in `<backup.json>`.
 
+## Dry run command
+
+To inspect what would happen during a backup or restore you can use the dry command.
+
+```sh
+blubee -b <path-to-backup.json> dry [backup|restore]
+```
+
+This would show you a list of files that would be changed/created and/or deleted if run without the `dry` command.
+
