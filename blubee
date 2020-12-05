@@ -8,22 +8,15 @@ print_help() {
     echo "command:"
     echo "  backup"
     echo "\tCreate backups as described by <backup.json>.\n"
-    echo "  restore <dest>"
-    echo "\tProvide a destination to restore to (from <backup.json>."
-    echo "\noptions:"
+    echo "  restore"
+    echo "\tRestore backups described in <backup.json>.\n"
+    echo "options:"
     echo "\t-b <backup-json>\tpath to backup config"
-    echo "\t-c <config-file>\tpath to custom config"
     echo "\t-h\t\t\tprint this help"
 }
 
-
-config_file=./blubee.conf
-. $config_file
-
-while getopts ":c:hb:" option; do
+while getopts ":hb:" option; do
     case "${option}" in
-        c)
-            config_file=$OPTARG;;
         b)
             backup_json_file=$OPTARG;;
         h)
@@ -56,8 +49,8 @@ backup() {
     backup_json="$1"
     backup_configs=$(get_json_element '.backup_configs' "$backup_json")
 
-    destination_path=$(get_json_element ".destination_path" "$backup_json")
-    [ -z "$destination_path" ] && echo "No destination path in 'backup.json'!" && exit 1
+    destination_path=$(get_json_element ".backup_destination" "$backup_json")
+    [ -z "$destination_path" ] && echo "No backup destination path in 'backup.json'!" && exit 1
     destination_path=$(trim_right_slash "$(dequote_string "$destination_path")")
 
     configs_count=$(list_length "$backup_configs")
@@ -86,9 +79,8 @@ backup() {
 restore() {
     backup_json="$1"
 
-    restore_path="$2"
-    backups_path=$(get_json_element '.destination_path' "$backup_json")
-    [ -z "$backups_path" ] && echo "No destination_path in 'backup.json'!" && exit 1
+    backups_path=$(get_json_element '.backup_destination' "$backup_json")
+    [ -z "$backups_path" ] && echo "No backup destination path in 'backup.json'!" && exit 1
     backups_path=$(trim_right_slash "$(dequote_string "$backups_path")")
 
     backup_configs=$(get_json_element '.backup_configs' "$backup_json")
@@ -101,9 +93,9 @@ restore() {
         [ -z "$config_name" ] && echo "Can not have config without name in 'backup.json'" && exit 1
         config_name=$(trim_left_slash "$(dequote_string "$config_name")")
 
-        source_root=$(get_json_element ".root" "$config")
-        [ -z "$source_root" ] && echo "No source root for config '$config_name'!" && exit 1
-        source_root=$(trim_right_slash "$(dequote_string "$source_root")")
+        restore_path=$(get_json_element ".root" "$config")
+        [ -z "$restore_path" ] && echo "No source root for config '$config_name'!" && exit 1
+        restore_path=$(trim_right_slash "$(dequote_string "$restore_path")")
 
         sources_list=$(get_json_element ".paths" "$config")
         [ -z "sources_list" ] && echo "No source paths for '$config_name'!" && exit 1
@@ -115,19 +107,13 @@ restore() {
     done
 }
 
-input_index=$(expr $OPTIND + 1)
 backup_config_json=$(cat $backup_json_file)
 case "$command" in
     backup)
         backup "$backup_config_json"
         ;;
     restore)
-        [ $input_index -le $# ] && command_input=$(echo $@ | cut -d' ' -f$input_index)
-        destination_path=$command_input
-        [ -z $destination_path ] && echo "No destination path provided to restore command!" && exit 1
-        destination_path=$(trim_right_slash "$destination_path")
-
-        restore "$backup_config_json" "$destination_path"
+        restore "$backup_config_json"
         ;;
     *)
         echo "Unrecognized command '$command'.\n"
