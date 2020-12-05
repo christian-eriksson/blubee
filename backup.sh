@@ -2,10 +2,12 @@
 
 . ./string_utils.sh
 
+exclude_file=.backup_ignore
+
 while getopts ":e:s:d:r:" option; do
     case "${option}" in
         e)
-            exclude_pattern=${OPTARG};;
+            exclude_file=${OPTARG};;
         d)
             destination_root=${OPTARG};;
         s)
@@ -53,11 +55,11 @@ for source_path in $source_paths; do
     mkdir -p $destination
     source="$source_root/$source_suffix"
 
-    rsync_command="rsync -aE --progress --delete --link-dest $latest_link/$backup_path_suffix"
-    [ -n "$exclude_pattern" ] && rsync_command="$rsync_command --exclude-from $exclude_pattern"
-    rsync_command="$rsync_command $source $destination"
-
-    eval $rsync_command
+    rsync -aE --progress --delete \
+        --link-dest "$latest_link/$backup_path_suffix" \
+        --exclude-from "$exclude_file" \
+        "$source" \
+        "$destination"
 done
 
 rm -rf $latest_link
