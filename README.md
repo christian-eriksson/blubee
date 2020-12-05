@@ -19,6 +19,13 @@ If `<install/path>` is not in your `$PATH`, create a link to `blubee` in a path 
 
 During restores blubee will backup files that has been changed or will be deleted by the backup. Default folder is `/var/local/blubee`, make sure to run blubee with a user with write permissions to this directory.
 
+### Dependencies
+
+Blubee uses the following tools. If you don't have them, you'll need to install them.
+
+* rsync
+* jq
+
 ## `backup.json`
 
 For defining a backup job, blubee expects a `backup.json` this file is passed to blubee for all commands. Here is a small example:
