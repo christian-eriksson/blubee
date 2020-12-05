@@ -1,6 +1,6 @@
 #!/bin/sh
 
-. ./jq_utils.sh
+. ./json_utils.sh
 . ./string_utils.sh
 
 print_help() {
