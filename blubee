@@ -10,9 +10,16 @@ print_help() {
     echo "\tCreate backups as described by <backup.json>.\n"
     echo "  restore"
     echo "\tRestore backups described in <backup.json>.\n"
+    echo "  dry [backup|restore]"
+    echo "\tDo a dry run for the choosen command.\n"
     echo "options:"
     echo "\t-b <backup-json>\tpath to backup config"
     echo "\t-h\t\t\tprint this help"
+}
+
+panic() {
+    print_help
+    exit 1
 }
 
 while getopts ":hb:" option; do
@@ -20,12 +27,11 @@ while getopts ":hb:" option; do
         b)
             backup_json_file=$OPTARG;;
         h)
-            print_help
-            exit 1
+            panic
             ;;
         :)
             echo "Missing argument for option '$OPTARG'"
-            exit 1
+            panic
             ;;
         ?)
             echo "Unrecognized option '$OPTARG'";;
@@ -35,14 +41,12 @@ done
 command=$(echo $@ | cut -d' ' -f$OPTIND)
 if [ -z "$command" ]; then
     echo "No command specified.\n"
-    print_help
-    exit 1
+    panic
 fi
 
 if [ -z "$backup_json_file" ]; then
     echo "No backup json specified, use the -b option.\n"
-    print_help
-    exit 1
+    panic
 fi
 
 backup() {
@@ -50,7 +54,7 @@ backup() {
     backup_configs=$(get_json_element '.backup_configs' "$backup_json")
 
     destination_path=$(get_json_element ".backup_destination" "$backup_json")
-    [ -z "$destination_path" ] && echo "No backup destination path in 'backup.json'!" && exit 1
+    [ -z "$destination_path" ] && echo "No backup destination path in 'backup.json'!" && panic
     destination_path=$(trim_right_slash "$(dequote_string "$destination_path")")
 
     configs_count=$(list_length "$backup_configs")
@@ -59,17 +63,17 @@ backup() {
         config=$(get_list_item "$backup_configs" "$config_index")
 
         config_name=$(get_json_element ".name" "$config")
-        [ -z "$config_name" ] && echo "Can not have config without name in 'backup.json'" && exit 1
+        [ -z "$config_name" ] && echo "Can not have config without name in 'backup.json'" && panic
         config_name=$(trim_left_slash "$(dequote_string "$config_name")")
 
         source_root=$(get_json_element ".root" "$config")
-        [ -z "$source_root" ] && echo "No source root for config '$config_name'!" && exit 1
+        [ -z "$source_root" ] && echo "No source root for config '$config_name'!" && panic
         source_root=$(trim_right_slash "$(dequote_string "$source_root")")
 
         sources_list=$(get_json_element ".paths" "$config")
-        [ -z "sources_list" ] && echo "No source paths for '$config_name'!" && exit 1
+        [ -z "sources_list" ] && echo "No source paths for '$config_name'!" && panic
         sources=$(extract_json_list "$sources_list")
-        [ -z "$sources" ] && echo "No sources in config '$config_name'!" && exit 1
+        [ -z "$sources" ] && echo "No sources in config '$config_name'!" && panic
 
         ./backup.sh -r "$source_root" -s "$sources"  -d "$destination_path/$config_name"
         config_index=$((config_index + 1))
@@ -80,7 +84,7 @@ restore() {
     backup_json="$1"
 
     backups_path=$(get_json_element '.backup_destination' "$backup_json")
-    [ -z "$backups_path" ] && echo "No backup destination path in 'backup.json'!" && exit 1
+    [ -z "$backups_path" ] && echo "No backup destination path in 'backup.json'!" && panic
     backups_path=$(trim_right_slash "$(dequote_string "$backups_path")")
 
     backup_configs=$(get_json_element '.backup_configs' "$backup_json")
@@ -90,17 +94,17 @@ restore() {
         config=$(get_list_item "$backup_configs" "$config_index")
 
         config_name=$(get_json_element ".name" "$config")
-        [ -z "$config_name" ] && echo "Can not have config without name in 'backup.json'" && exit 1
+        [ -z "$config_name" ] && echo "Can not have config without name in 'backup.json'" && panic
         config_name=$(trim_left_slash "$(dequote_string "$config_name")")
 
         restore_path=$(get_json_element ".root" "$config")
-        [ -z "$restore_path" ] && echo "No source root for config '$config_name'!" && exit 1
+        [ -z "$restore_path" ] && echo "No source root for config '$config_name'!" && panic
         restore_path=$(trim_right_slash "$(dequote_string "$restore_path")")
 
         sources_list=$(get_json_element ".paths" "$config")
-        [ -z "sources_list" ] && echo "No source paths for '$config_name'!" && exit 1
+        [ -z "sources_list" ] && echo "No source paths for '$config_name'!" && panic
         sources=$(extract_json_list "$sources_list")
-        [ -z "$sources" ] && echo "No sources in config '$config_name'!" && exit 1
+        [ -z "$sources" ] && echo "No sources in config '$config_name'!" && panic
 
         ./restore.sh -r "$restore_path" -s "$backups_path/$config_name" -p "$sources"
         config_index=$((config_index + 1))
@@ -117,8 +121,7 @@ case "$command" in
         ;;
     *)
         echo "Unrecognized command '$command'.\n"
-        print_help
-        exit 1
+        panic
         ;;
 esac
 
