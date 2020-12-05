@@ -47,7 +47,7 @@ For defining a backup job, blubee expects a `backup.json` this file is passed to
 }
 ```
 
-This would tell blubee that backups are to be stored in `/backup/path". Under this directory, blubee will create one directory for each backup config in `backup.json`. In this case, one directory called `my-backup`. Within these backup paths blubee will create a new directory for each backup created, named after the date and time of the backup. Additionally there will be a directory, `latest`, linking to the most recent backup.
+This would tell blubee that backups are to be stored in `/backup/path`. Under this directory, blubee will create one directory for each backup config in `backup.json`. In this case, one directory called `my-backup`. Within these backup paths blubee will create a new directory for each backup created, named after the date and time of the backup. Additionally there will be a directory, `latest`, linking to the most recent backup.
 
 The backup configs specify which files to backup. Each config specifies a `root` path that will be prepended to each path in `paths`. This should form absolute paths to the files and/or directories to backup. Preferably the root should be as deep as possible. For example if `/my/path/to/file` and `/my/path/to/another/file` is to be backed up choose `/my/path/to` as the root.
 
