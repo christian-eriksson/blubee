@@ -46,13 +46,16 @@ latest_link="$destination_root/latest"
 
 [ ! -L $latest_link ] && echo "First backup! Link to latest previous backup does not exist, it will be created."
 
-for source in $source_paths; do
-    source_suffix=$(trim_right_slash "$(trim_left_slash "$source")")
+for source_path in $source_paths; do
+    source_suffix=$(trim_right_slash "$(trim_left_slash "$source_path")")
     backup_path_suffix=$(trim_right_slash "$(trim_to_first_right_slash "$source_suffix")")
+    destination="$backup_path/$backup_path_suffix"
+    mkdir -p $destination
+    source="$source_root/$source_suffix"
 
     rsync_command="rsync -aE --progress --delete --link-dest $latest_link/$backup_path_suffix"
     [ -n "$exclude_pattern" ] && rsync_command="$rsync_command --exclude-from $exclude_pattern"
-    rsync_command="$rsync_command $source_root/$source_suffix $backup_path/$backup_path_suffix"
+    rsync_command="$rsync_command $source $destination"
 
     eval $rsync_command
 done
