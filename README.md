@@ -6,14 +6,14 @@ Simple backup utility, based on rsync.
 
 Choose an `<install/path>` and run:
 
-```sh
+```
 $ cd <install/path>
 $ git clone https://github.com/christian-eriksson/blubee.git
 ```
 
 If `<install/path>` is not in your `$PATH`, create a link to `blubee` in a path that is in `$PATH`, eg. `/usr/local/bin`
 
-```sh
+```
 # ln -s <insall/path>/blubee /usr/local/bin/blubee
 ```
 
@@ -106,7 +106,7 @@ The result of a backup performed with the example `backup.json` in year 2020 on 
 
 You should have a `backup.json` as described above, to restore the backup created in the example above run:
 
-```sh
+```
 blubee -b <path-to-backup.json> restore
 ```
 
@@ -116,7 +116,7 @@ The data will be restored to the root+path combinations specified in `<backup.js
 
 To inspect what would happen during a backup or restore you can use the dry command.
 
-```sh
+```
 blubee -b <path-to-backup.json> dry [backup|restore]
 ```
 
