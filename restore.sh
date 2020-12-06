@@ -41,7 +41,7 @@ restore_root=$(trim_right_slash "$restore_root")
 
 for restore_path in $restore_paths; do
     source_suffix=$(trim_right_slash "$(trim_left_slash "$restore_path")")
-    restore_path_suffix=$(trim_right_slash "$(trim_to_first_right_slash "$source_suffix")")
+    restore_path_suffix=$(trim_to_first_right_slash "$source_suffix")
     rsync -aE --progress --delete $dry_run --backup \
         --backup-dir "/var/local/blubee/backups/$datetime_of_snapshot/$restore_path_suffix" \
         "$backup_source_path/$datetime_of_snapshot/$source_suffix" \
