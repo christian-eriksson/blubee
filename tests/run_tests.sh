@@ -7,6 +7,7 @@ cd $relative_dir
 test_scripts="
 ./create_backups.tests/simple_backup.test.sh
 ./create_backups.tests/consecutive_backups.test.sh
+./restore_backups.tests/simple_restore.test.sh
 "
 
 for test_script in $test_scripts; do
