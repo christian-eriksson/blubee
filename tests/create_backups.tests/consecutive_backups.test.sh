@@ -37,7 +37,7 @@ echo "\
 cd ../..
 
 # when we run blubee
-blubee -b "$test_dir/$backup_json" backup
+./blubee -b "$test_dir/$backup_json" backup
 
 # and we change a few files
 files="file1 dir1/sub_dir/file7 dir2/file5"
@@ -49,7 +49,7 @@ done
 sleep 1
 
 # and we run blubee
-blubee -b "$test_dir/$backup_json" backup
+./blubee -b "$test_dir/$backup_json" backup
 
 result_dir="$backup_dir/$name"
 test_restults=""

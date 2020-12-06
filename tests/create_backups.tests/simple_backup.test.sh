@@ -32,7 +32,7 @@ echo "\
 cd ../..
 
 # when we run blubee
-blubee -b "$test_dir/$backup_json" backup
+./blubee -b "$test_dir/$backup_json" backup
 
 result_dir="$test_dir/simple_backup.result/$name"
 test_restults=""
