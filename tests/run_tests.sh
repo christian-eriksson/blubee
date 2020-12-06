@@ -4,11 +4,7 @@ relative_dir="${0%/*}"
 cd $relative_dir
 
 # create backups
-test_scripts="
-./create_backups.tests/simple_backup.test.sh
-./create_backups.tests/consecutive_backups.test.sh
-./restore_backups.tests/simple_restore.test.sh
-"
+test_scripts=$(find ./ -type f -regex ".*\.test\.sh")
 
 passed=0
 failed=0
