@@ -11,7 +11,7 @@ test_scripts="
 "
 
 for test_script in $test_scripts; do
-    results=$(eval $test_script | grep -e "^PASS$" -e "^FAIL$")
+    results=$(eval $test_script 2> /dev/null | grep -e "^PASS$" -e "^FAIL$")
     echo "\033[1mRESULTS:\033[m"
     echo "\033[1m$test_script\033[m"
     for result in $results; do
