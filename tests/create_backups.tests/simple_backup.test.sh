@@ -16,7 +16,7 @@ echo "\
     \"backup_configs\": [
         {
             \"name\": \"$name\",
-            \"root\": \"$test_dir/simple_backup\",
+            \"root\": \"$test_dir/test_files_root\",
             \"paths\": [
                 \"file1\",
                 \"dir1/file3\",
