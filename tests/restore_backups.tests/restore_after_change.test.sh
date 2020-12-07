@@ -60,17 +60,13 @@ done
 ./blubee -b "$test_dir/$backup_json" restore
 
 result_dir="$root_copy"
-test_restults=""
 
 # THEN the restored directory contains all the backed up files (and none of the not backed up)
-diff -r "$result_dir" "$test_dir/restore_after_change.expected" \
-    && test_results="$test_results PASS" \
-    || test_results="$test_results FAIL"
+diff -r "$result_dir" "$test_dir/restore_after_change.expected"
+test_results="$?"
 
 echo "$script_name\nRESULTS:"
-for result in $test_results; do
-    echo $result
-done
+echo "$(asserts_to_text "$test_results")"
 
 # clean up
 rm -r "$backup_dir"

@@ -56,30 +56,24 @@ test_restults=""
 
 # then there are three files/directories in the backup directory
 file_count=$(count $result_dir/*)
-[ $file_count -eq 3 ] \
-    && test_results="$test_results PASS" \
-    || test_results="$test_results FAIL"
+[ $file_count -eq 3 ]
+test_results="$test_results $?"
 
 # and two of the directories has a name similar to a date stamp
 date_dir_count=$(find $result_dir -maxdepth 1 -type d | grep -e "[0-9]\{8\}_[0-9]\{6\}$" | wc -l)
-[ $date_dir_count -eq 2 ] \
-    && test_results="$test_results PASS" \
-    || test_results="$test_results FAIL"
+[ $date_dir_count -eq 2 ]
+test_results="$test_results $?"
 
 # and the latest backup is a link
-[ -L "$result_dir/latest" ] \
-    && test_results="$test_results PASS" \
-    || test_results="$test_results FAIL"
+[ -L "$result_dir/latest" ]
+test_results="$test_results $?"
 
 # and the latest backup has the expected content
-diff -r "$result_dir/latest" "$test_dir/consecutive_backups.expected" \
-    && test_results="$test_results PASS" \
-    || test_results="$test_results FAIL"
+diff -r "$result_dir/latest" "$test_dir/consecutive_backups.expected"
+test_results="$test_results $?"
 
 echo "$script_name\nRESULTS:"
-for result in $test_results; do
-    echo $result
-done
+echo "$(asserts_to_text "$test_results")"
 
 # clean up
 rm -r "$backup_dir"

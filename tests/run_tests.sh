@@ -23,9 +23,10 @@ for test_script in $test_scripts; do
             failed=$((failed + 1))
         fi
     done
+    echo ""
 done
 
-echo "\n\033[1mRESULTS:\033[m"
+echo "\033[1mRESULT SUMMARY:\033[m"
 echo "\033[1m\033[38;5;2m$passed tests passed\033[m"
 echo "\033[1m\033[38;5;9m$failed tests failed\033[m"
 
