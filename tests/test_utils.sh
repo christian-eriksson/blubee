@@ -26,3 +26,11 @@ assert_dirs_equal() {
     diff -r "$directory_one" "$directory_two"
     echo "$?"
 }
+
+assert_not_equal() {
+    value_one="$1"
+    value_two="$2"
+    [ "$value_one" -ne "$value_two" ]
+    echo "$?"
+}
+

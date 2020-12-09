@@ -54,8 +54,7 @@ exit_code=$?
 
 test_results=""
 # THEN blubee exits with non 0 code
-[ "$exit_code" -ne "0" ]
-test_results="$test_results $?"
+test_results="$test_results $(assert_not_equal "$exit_code" "0")"
 
 # AND the resulting source directory has not restored
 has_same_content=$(assert_dirs_equal "$source_root" "$test_dir/fail_if_no_permissions_to_write_to_backup_copy_during_restore.expected")
