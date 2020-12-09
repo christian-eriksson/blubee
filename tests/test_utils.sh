@@ -56,3 +56,8 @@ assert_is_link() {
     echo "$?"
 }
 
+assert_dir_exists() {
+    directory="$1"
+    [ -d "$directory" ]
+    echo "$?"
+}

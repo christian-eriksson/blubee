@@ -47,11 +47,8 @@ cd ../..
 test_results=""
 
 # THEN there is one directory per config in the backup destination
-[ -d "$destination/$name_one" ]
-test_results="$test_results $?"
-
-[ -d "$destination/$name_two" ]
-test_results="$test_results $?"
+test_results="$test_results $(assert_dir_exists "$destination/$name_one")"
+test_results="$test_results $(assert_dir_exists "$destination/$name_two")"
 
 # AND each config's directory has one directory with a name similar to a date stamp and one link called 'latest'
 test_results="$test_results $(assert_datetime_dir_count "$destination/$name_one" 1)"
