@@ -1,14 +1,14 @@
 #!/bin/sh
 
-script_name="simple_restore.test.sh"
+script_name="restore_after_delete.test.sh"
 relative_dir="${0%/*}"
 cd $relative_dir
 
 . ../test_utils.sh
 
 test_dir="$(pwd)"
-backup_json="simple_restore.backup.json"
-backup_dir="$test_dir/simple_restore.result"
+backup_json="restore_after_delete.backup.json"
+backup_dir="$test_dir/restore_after_delete.result"
 root="$test_dir/test_files_root"
 root_copy="$test_dir/test_files_root.copy"
 cp -r $root $root_copy
@@ -48,7 +48,7 @@ rm -r "$root_copy"
 result_dir="$root_copy"
 
 # THEN the restored directory contains all the backed up files (and none of the not backed up)
-diff -r "$result_dir" "$test_dir/simple_restore.expected"
+diff -r "$result_dir" "$test_dir/restore_after_delete.expected"
 test_results="$?"
 
 echo "$script_name\nRESULTS:"
