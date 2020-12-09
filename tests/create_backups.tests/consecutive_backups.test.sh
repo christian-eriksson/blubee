@@ -54,10 +54,8 @@ sleep 1
 result_dir="$backup_dir/$name"
 test_restults=""
 
-# then there are three files/directories in the backup directory
-file_count=$(count $result_dir/*)
-[ $file_count -eq 3 ]
-test_results="$test_results $?"
+# THEN there are three files/directories in the backup directory
+test_results="$test_results $(assert_files_in_dir "$result_dir" 3)"
 
 # and two of the directories has a name similar to a date stamp
 date_dir_count=$(find $result_dir -maxdepth 1 -type d | grep -e "[0-9]\{8\}_[0-9]\{6\}$" | wc -l)

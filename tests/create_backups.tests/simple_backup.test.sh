@@ -37,10 +37,8 @@ cd ../..
 result_dir="$test_dir/simple_backup.result/$name"
 test_results=""
 
-# then there are two files/directories in the backup directory
-file_count=$(count $result_dir/*)
-[ $file_count -eq 2 ]
-test_results="$test_results $?"
+# THEN there are two files/directories in the backup directory
+test_results="$test_results $(assert_files_in_dir "$result_dir" 2)"
 
 # and one of the directories has a name similar to a date stamp
 date_dir_count=$(find $result_dir -maxdepth 1 -type d | grep -e "[0-9]\{8\}_[0-9]\{6\}$" | wc -l)

@@ -34,3 +34,11 @@ assert_not_equal() {
     echo "$?"
 }
 
+assert_files_in_dir() {
+    directory="$1"
+    expected_count="$2"
+    file_count=$(count $directory/*)
+    [ "$file_count" -eq "$expected_count" ]
+    echo "$?"
+}
+
