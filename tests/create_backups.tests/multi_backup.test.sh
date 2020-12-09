@@ -54,19 +54,13 @@ test_results="$test_results $?"
 test_results="$test_results $?"
 
 # AND each config's directory has one directory with a name similar to a date stamp and one link called 'latest'
-date_dir_count=$(find "$destination/$name_one" -maxdepth 1 -type d | grep -e "[0-9]\{8\}_[0-9]\{6\}$" | wc -l)
-[ $date_dir_count -eq 1 ]
-test_results="$test_results $?"
-
 [ -L "$destination/$name_one/latest" ]
 test_results="$test_results $?"
-
-date_dir_count=$(find "$destination/$name_two" -maxdepth 1 -type d | grep -e "[0-9]\{8\}_[0-9]\{6\}$" | wc -l)
-[ $date_dir_count -eq 1 ]
-test_results="$test_results $?"
+test_results="$test_results $(assert_datetime_dir_count "$destination/$name_one" 1)"
 
 [ -L "$destination/$name_two/latest" ]
 test_results="$test_results $?"
+test_results="$test_results $(assert_datetime_dir_count "$destination/$name_two" 1)"
 
 # AND the latest backup links point to the expected content
 has_same_content=$(assert_dirs_equal "$destination/$name_one/latest" "$test_dir/multi_backup.expected/$name_one")

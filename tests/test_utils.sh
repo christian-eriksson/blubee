@@ -42,3 +42,11 @@ assert_files_in_dir() {
     echo "$?"
 }
 
+assert_datetime_dir_count() {
+    directory="$1"
+    expected_count="$2"
+    date_dir_count=$(find "$directory" -maxdepth 1 -type d | grep -e "[0-9]\{8\}_[0-9]\{6\}$" | wc -l)
+    [ "$date_dir_count" -eq "$expected_count" ]
+    echo "$?"
+}
+

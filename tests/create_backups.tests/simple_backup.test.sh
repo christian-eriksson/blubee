@@ -41,9 +41,7 @@ test_results=""
 test_results="$test_results $(assert_files_in_dir "$result_dir" 2)"
 
 # and one of the directories has a name similar to a date stamp
-date_dir_count=$(find $result_dir -maxdepth 1 -type d | grep -e "[0-9]\{8\}_[0-9]\{6\}$" | wc -l)
-[ $date_dir_count -eq 1 ]
-test_results="$test_results $?"
+test_results="$test_results $(assert_datetime_dir_count "$result_dir" 1)"
 
 # and the latest backup is a link
 [ -L "$result_dir/latest" ]
