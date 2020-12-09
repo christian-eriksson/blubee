@@ -8,7 +8,7 @@ cd $relative_dir
 test_dir="$(pwd)"
 backup_json="simple_backup.backup.json"
 
-# given a test json
+# GIVEN a test json
 name=simple
 echo "\
 {
@@ -28,10 +28,8 @@ echo "\
 }\
 " > $backup_json
 
-# change to blubee root path
+# WHEN we run blubee
 cd ../..
-
-# when we run blubee
 ./blubee -b "$test_dir/$backup_json" backup
 
 result_dir="$test_dir/simple_backup.result/$name"
