@@ -14,6 +14,7 @@ print_help() {
     echo "\tDo a dry run for the choosen command.\n"
     echo "options:"
     echo "\t-b <backup-json>\tpath to backup config"
+    echo "\t-c <config-file>\tpath to custom blubee config"
     echo "\t-h\t\t\tprint this help"
 }
 
@@ -22,10 +23,12 @@ panic() {
     exit 1
 }
 
-while getopts ":hb:" option; do
+while getopts ":hb:c:" option; do
     case "${option}" in
         b)
             backup_json_file=$OPTARG;;
+        c)
+            config_file=$OPTARG;;
         h)
             panic
             ;;
@@ -47,6 +50,10 @@ fi
 if [ -z "$backup_json_file" ]; then
     echo "No backup json specified, use the -b option.\n"
     panic
+fi
+
+if [ ! -z "$config_file" ]; then
+    . $config_file
 fi
 
 backup() {
@@ -84,7 +91,8 @@ backup() {
 
 restore() {
     backup_json="$1"
-    additional_options="$2"
+    [ ! -z "$2" ] && restore_backup_copy="-b $2"
+    additional_options="$3"
 
     backups_path=$(get_json_element '.backup_destination' "$backup_json")
     [ -z "$backups_path" ] && echo "No backup destination path in 'backup.json'!" && panic
@@ -109,7 +117,7 @@ restore() {
         sources=$(extract_json_list "$sources_list")
         [ -z "$sources" ] && echo "No sources in config '$config_name'!" && panic
 
-        ./restore.sh -r "$restore_path" -s "$backups_path/$config_name" -p "$sources" $additional_options
+        ./restore.sh -r "$restore_path" -s "$backups_path/$config_name" -p "$sources" $restore_backup_copy $additional_options
         config_index=$((config_index + 1))
     done
 }
@@ -120,7 +128,7 @@ case "$command" in
         backup "$backup_config_json"
         ;;
     restore)
-        restore "$backup_config_json"
+        restore "$backup_config_json" "$RESTORE_BACKUP_COPY"
         ;;
     dry)
         sub_command_index=$(expr $OPTIND + 1)
@@ -131,7 +139,7 @@ case "$command" in
                 backup "$backup_config_json" "-x"
                 ;;
             restore)
-                restore "$backup_config_json" "-x"
+                restore "$backup_config_json" "$RESTORE_BACKUP_COPY" "-x"
                 ;;
             *)
                 echo "Unrecognized sub command for dry run '$sub_command'.\n"

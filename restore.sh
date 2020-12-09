@@ -4,7 +4,9 @@
 
 datetime_of_snapshot="latest"
 
-while getopts ":r:p:d:s:x" option; do
+backup_copy_path="/var/local/blubee/backups"
+
+while getopts ":r:p:d:s:b:x" option; do
     case "${option}" in
         r)
             restore_root=${OPTARG};;
@@ -16,6 +18,8 @@ while getopts ":r:p:d:s:x" option; do
             backup_source_path=${OPTARG};;
         x)
             dry_run="--dry-run";;
+        b)
+            backup_copy_path=$(trim_right_slash ${OPTARG});;
         :)
             echo "Missing argument for option '$OPTARG'"
             exit 1
@@ -43,7 +47,7 @@ for restore_path in $restore_paths; do
     source_suffix=$(trim_right_slash "$(trim_left_slash "$restore_path")")
     restore_path_suffix=$(trim_to_first_right_slash "$source_suffix")
     rsync -aE --progress --delete $dry_run --backup \
-        --backup-dir "/var/local/blubee/backups/$datetime_of_snapshot/$restore_path_suffix" \
+        --backup-dir "$backup_copy_path/$datetime_of_snapshot/$restore_path_suffix" \
         "$backup_source_path/$datetime_of_snapshot/$source_suffix" \
         "$restore_root/$restore_path_suffix"
 done

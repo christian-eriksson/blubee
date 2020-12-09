@@ -17,7 +17,7 @@ If `<install/path>` is not in your `$PATH`, create a link to `blubee` in a path 
 # ln -s <insall/path>/blubee /usr/local/bin/blubee
 ```
 
-During restores blubee will backup files that has been changed or will be deleted by the backup. Default folder is `/var/local/blubee`, make sure to run blubee with a user with write permissions to this directory.
+During restores blubee will save files that has been changed or will be deleted by the backup. Default folder for this backup copy is `/var/local/blubee`, make sure to run blubee with a user with write permissions to this directory or use a custom config with the `RESTORE_BACKUP_PATH` variable set.
 
 ### Dependencies
 
@@ -52,6 +52,20 @@ This would tell blubee that backups are to be stored in `/backup/path`. Under th
 The backup configs specify which files to backup. Each config specifies a `root` path that will be prepended to each path in `paths`. This should form absolute paths to the files and/or directories to backup. Preferably the root should be as deep as possible. For example if `/my/path/to/file` and `/my/path/to/another/file` is to be backed up choose `/my/path/to` as the root.
 
 **NOTE**: Careful when creating configs, blubee runs the `rsync` command with the --delete option so overlapping root+path combinations in the configs may result in dataloss. Use at your own risk! To minimize the risk, deleted and changed files are saved to `/var/local/blubee/backups`.
+
+## Configuration
+
+You may configure blubee by passing a custom config using the `-c` option. This file will hold variables like this:
+
+```sh
+RESTORE_BACKUP_PATH=/some/path
+```
+
+Possible variables for the config are:
+
+| Variable              | Description                                                                                     |
+| --------------------- | ----------------------------------------------------------------------------------------------- |
+| `RESTORE_BACKUP_PATH` | An absolute path where blubee will store files that were changed or deleted during last restore |
 
 ## Creating Backups
 
