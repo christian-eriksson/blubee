@@ -40,6 +40,14 @@ echo "\
 }\
 " > $backup_json
 
+# AND a config with a RESTORE_BACKUP_COPY variable
+config_path="$test_dir/multi_restore_after_delete.config"
+restore_backup_copy_path="$test_dir/multi_restore_after_delete.restore_backup"
+mkdir $restore_backup_copy_path
+echo "\
+RESTORE_BACKUP_COPY=$restore_backup_copy_path
+" > $config_path
+
 # AND the source root contains some content
 cp -r "$test_dir/test_files_root" "$source_root"
 
@@ -55,7 +63,7 @@ rm -r $source_root
 test_results=""
 
 # WHEN we restore the backup
-./blubee -b "$backup_json_path" restore
+./blubee -b "$backup_json_path" -c "$config_path" restore
 
 # THEN the restored source directory has the expected files, content and structure
 diff -r "$source_root" "$test_dir/multi_restore_after_delete.expected"
@@ -68,4 +76,6 @@ echo "$(asserts_to_text "$test_results")"
 rm -r "$destination"
 rm "$test_dir/$backup_json"
 rm -r "$source_root"
+rm -r "$restore_backup_copy_path"
+rm "$config_path"
 

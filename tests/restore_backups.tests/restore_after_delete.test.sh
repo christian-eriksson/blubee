@@ -33,6 +33,14 @@ echo "\
 }\
 " > $backup_json
 
+# AND a config with a RESTORE_BACKUP_COPY variable
+config_path="$test_dir/restore_afer_delete.config"
+restore_backup_copy_path="$test_dir/restore_afer_delete.restore_backup"
+mkdir $restore_backup_copy_path
+echo "\
+RESTORE_BACKUP_COPY=$restore_backup_copy_path
+" > $config_path
+
 # AND changed to blubee root path
 cd ../..
 
@@ -43,7 +51,7 @@ cd ../..
 rm -r "$root_copy"
 
 # WHEN we restore the backup
-./blubee -b "$test_dir/$backup_json" restore
+./blubee -b "$test_dir/$backup_json" -c "$config_path" restore
 
 result_dir="$root_copy"
 
@@ -58,4 +66,5 @@ echo "$(asserts_to_text "$test_results")"
 rm -r "$backup_dir"
 rm "$test_dir/$backup_json"
 rm -r $root_copy
-
+rm -r "$restore_backup_copy_path"
+rm "$config_path"
