@@ -61,3 +61,9 @@ assert_dir_exists() {
     [ -d "$directory" ]
     echo "$?"
 }
+
+assert_no_path() {
+    path="$1"
+    [ ! -e "$path" ]
+    echo "$?"
+}
