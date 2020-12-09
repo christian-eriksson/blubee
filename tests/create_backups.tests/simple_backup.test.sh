@@ -44,8 +44,7 @@ test_results="$test_results $(assert_files_in_dir "$result_dir" 2)"
 test_results="$test_results $(assert_datetime_dir_count "$result_dir" 1)"
 
 # and the latest backup is a link
-[ -L "$result_dir/latest" ]
-test_results="$test_results $?"
+test_results="$test_results $(assert_is_link "$result_dir/latest")"
 
 # and the latest backup has the expected content
 has_same_content=$(assert_dirs_equal "$result_dir/latest" "$test_dir/simple_backup.expected")

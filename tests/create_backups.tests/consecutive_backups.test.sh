@@ -60,11 +60,10 @@ test_results="$test_results $(assert_files_in_dir "$result_dir" 3)"
 # AND two of the directories has a name similar to a date stamp
 test_results="$test_results $(assert_datetime_dir_count "$result_dir" 2)"
 
-# and the latest backup is a link
-[ -L "$result_dir/latest" ]
-test_results="$test_results $?"
+# AND the latest backup is a link
+test_results="$test_results $(assert_is_link "$result_dir/latest")"
 
-# and the latest backup has the expected content
+# AND the latest backup has the expected content
 has_same_content=$(assert_dirs_equal "$result_dir/latest" "$test_dir/consecutive_backups.expected")
 test_results="$test_results $has_same_content"
 

@@ -50,3 +50,9 @@ assert_datetime_dir_count() {
     echo "$?"
 }
 
+assert_is_link() {
+    directory="$1"
+    [ -L "$directory" ]
+    echo "$?"
+}
+

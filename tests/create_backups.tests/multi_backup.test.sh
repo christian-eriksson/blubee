@@ -54,13 +54,11 @@ test_results="$test_results $?"
 test_results="$test_results $?"
 
 # AND each config's directory has one directory with a name similar to a date stamp and one link called 'latest'
-[ -L "$destination/$name_one/latest" ]
-test_results="$test_results $?"
 test_results="$test_results $(assert_datetime_dir_count "$destination/$name_one" 1)"
+test_results="$test_results $(assert_is_link "$destination/$name_one/latest")"
 
-[ -L "$destination/$name_two/latest" ]
-test_results="$test_results $?"
 test_results="$test_results $(assert_datetime_dir_count "$destination/$name_two" 1)"
+test_results="$test_results $(assert_is_link "$destination/$name_two/latest")"
 
 # AND the latest backup links point to the expected content
 has_same_content=$(assert_dirs_equal "$destination/$name_one/latest" "$test_dir/multi_backup.expected/$name_one")
