@@ -39,6 +39,8 @@ if [ -z "$backup_source_path" ]; then
     exit 1
 fi
 
+[ ! -w "$backup_copy_path" ] && echo "Don't have permissions to write to '$backup_copy_path', rectify this and try again" && exit 1
+
 backup_source_path=$(trim_right_slash "$backup_source_path")
 datetime_of_snapshot=$(trim_right_slash "$(trim_left_slash "$datetime_of_snapshot")")
 restore_root=$(trim_right_slash "$restore_root")

@@ -118,6 +118,8 @@ restore() {
         [ -z "$sources" ] && echo "No sources in config '$config_name'!" && panic
 
         ./restore.sh -r "$restore_path" -s "$backups_path/$config_name" -p "$sources" $restore_backup_copy $additional_options
+        exit_code=$?
+        [ "$exit_code" -ne "0" ] && exit $exit_code
         config_index=$((config_index + 1))
     done
 }
@@ -129,6 +131,7 @@ case "$command" in
         ;;
     restore)
         restore "$backup_config_json" "$RESTORE_BACKUP_COPY"
+        exit $?
         ;;
     dry)
         sub_command_index=$(expr $OPTIND + 1)
@@ -140,6 +143,7 @@ case "$command" in
                 ;;
             restore)
                 restore "$backup_config_json" "$RESTORE_BACKUP_COPY" "-x"
+                exit $?
                 ;;
             *)
                 echo "Unrecognized sub command for dry run '$sub_command'.\n"
