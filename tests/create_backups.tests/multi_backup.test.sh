@@ -69,11 +69,11 @@ test_results="$test_results $?"
 test_results="$test_results $?"
 
 # AND the latest backup links point to the expected content
-diff -r "$destination/$name_one/latest" "$test_dir/multi_backup.expected/$name_one"
-test_results="$test_results $?"
+has_same_content=$(assert_dirs_equal "$destination/$name_one/latest" "$test_dir/multi_backup.expected/$name_one")
+test_results="$test_results $has_same_content"
 
-diff -r "$destination/$name_two/latest" "$test_dir/multi_backup.expected/$name_two"
-test_results="$test_results $?"
+has_same_content=$(assert_dirs_equal "$destination/$name_two/latest" "$test_dir/multi_backup.expected/$name_two")
+test_results="$test_results $has_same_content"
 
 echo "multi_backup.test.sh\nRESULTS:"
 echo "$(asserts_to_text "$test_results")"

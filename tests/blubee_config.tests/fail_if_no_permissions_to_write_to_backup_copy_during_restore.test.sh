@@ -58,8 +58,8 @@ test_results=""
 test_results="$test_results $?"
 
 # AND the resulting source directory has not restored
-diff -r "$source_root" "$test_dir/fail_if_no_permissions_to_write_to_backup_copy_during_restore.expected"
-test_results="$test_results $?"
+has_same_content=$(assert_dirs_equal "$source_root" "$test_dir/fail_if_no_permissions_to_write_to_backup_copy_during_restore.expected")
+test_results="$test_results $has_same_content"
 
 echo "fail_if_no_permissions_to_write_to_backup_copy_during_restore.test.sh\nRESULTS:"
 echo "$(asserts_to_text "$test_results")"

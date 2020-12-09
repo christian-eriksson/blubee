@@ -69,8 +69,9 @@ test_results="$test_results $?"
 test_results="$test_results $?"
 
 # and the latest backup has the expected content
-diff -r "$result_dir/latest" "$test_dir/consecutive_backups.expected"
-test_results="$test_results $?"
+has_same_content=$(assert_dirs_equal "$result_dir/latest" "$test_dir/consecutive_backups.expected")
+test_results="$test_results $has_same_content"
+
 
 echo "$script_name\nRESULTS:"
 echo "$(asserts_to_text "$test_results")"

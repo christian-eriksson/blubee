@@ -50,13 +50,8 @@ echo "new file" > "$source_root/dir1/new-file"
 # WHEN we restore the backup
 ./blubee -b "$backup_json_path" -c "$config_path" restore
 
-test_results=""
-
 # THEN the restore backup copy directory will have the expected content
-diff -r "$restore_backup_copy_path/latest" "$test_dir/possible_to_pass_backup_copy_path_in_config.expected"
-test_results="$test_results $?"
-
-# AND the 
+test_results=$(assert_dirs_equal "$restore_backup_copy_path/latest" "$test_dir/possible_to_pass_backup_copy_path_in_config.expected")
 
 echo "possible_to_pass_backup_copy_path_in_config.test.sh\nRESULTS:"
 echo "$(asserts_to_text "$test_results")"

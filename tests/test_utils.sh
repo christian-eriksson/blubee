@@ -20,3 +20,9 @@ asserts_to_text() {
     done
 }
 
+assert_dirs_equal() {
+    directory_one="$1"
+    directory_two="$2"
+    diff -r "$directory_one" "$directory_two"
+    echo "$?"
+}

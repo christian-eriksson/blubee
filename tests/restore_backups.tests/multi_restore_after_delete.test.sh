@@ -60,14 +60,11 @@ cd ../..
 # AND we accidentally deleted the original directory
 rm -r $source_root
 
-test_results=""
-
 # WHEN we restore the backup
 ./blubee -b "$backup_json_path" -c "$config_path" restore
 
 # THEN the restored source directory has the expected files, content and structure
-diff -r "$source_root" "$test_dir/multi_restore_after_delete.expected"
-test_results="$test_results $?"
+test_results=$(assert_dirs_equal "$source_root" "$test_dir/multi_restore_after_delete.expected")
 
 echo "multi_backup.test.sh\nRESULTS:"
 echo "$(asserts_to_text "$test_results")"

@@ -76,10 +76,8 @@ echo "new file" > "$source_root/dir3/new-file-no-backup"
 # WHEN we restore the backup
 ./blubee -b "$backup_json_path" -c "$config_path" restore
 
-test_results=""
 # THEN the restored source directory has the expected files, content and structure
-diff -r "$source_root" "$test_dir/multi_restore_after_change.expected"
-test_results="$test_results $?"
+test_results=$(assert_dirs_equal "$source_root" "$test_dir/multi_restore_after_change.expected")
 
 echo "multi_restore_after_change.test.sh\nRESULTS:"
 echo "$(asserts_to_text "$test_results")"

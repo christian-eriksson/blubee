@@ -70,8 +70,7 @@ done
 result_dir="$root_copy"
 
 # THEN the restored directory contains all the backed up files (and none of the not backed up)
-diff -r "$result_dir" "$test_dir/restore_after_change.expected"
-test_results="$?"
+test_results=$(assert_dirs_equal "$result_dir" "$test_dir/restore_after_change.expected")
 
 echo "$script_name\nRESULTS:"
 echo "$(asserts_to_text "$test_results")"
