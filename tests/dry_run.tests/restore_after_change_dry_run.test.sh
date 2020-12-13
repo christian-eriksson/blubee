@@ -9,7 +9,7 @@ test_dir="$(pwd)"
 backup_json="$test_dir/restore_after_change_dry_run.backup.json"
 backup_dir="$test_dir/restore_after_change_dry_run.backup"
 root="$test_dir/test_files_root"
-root_copy="$test_dir/test_files_root.copy"
+root_copy="$test_dir/test_files_root_restore_after_change.copy"
 cp -r $root $root_copy
 
 # GIVEN a test json
