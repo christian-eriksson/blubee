@@ -64,9 +64,10 @@ done
 # WHEN we make a dry restore run with blubee
 ./blubee -b "$backup_json" -c "$config_path" dry restore
 
-test_results=""
+# THEN blubee ran without crashing
+test_results="$?"
 
-# THEN the backup directory retains its changes
+# AND the backup directory retains its changes
 test_results="$test_results $(assert_dirs_equal "$root_copy" "$test_dir/restore_after_change_dry_run.expected/root")"
 
 # AND the backup is untouched

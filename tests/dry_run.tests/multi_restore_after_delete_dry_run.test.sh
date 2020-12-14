@@ -64,9 +64,10 @@ rm -r $source_root
 # WHEN we make a dry run to restore the backup
 ./blubee -b "$backup_json" -c "$config_path" dry restore
 
-test_results=""
+# THEN blubee ran without crashing
+test_results="$?"
 
-# THEN the backuped directory does not exist
+# AND the backuped directory does not exist
 test_results="$test_results $(assert_no_path "$source_root")"
 
 # AND the backup is untouched

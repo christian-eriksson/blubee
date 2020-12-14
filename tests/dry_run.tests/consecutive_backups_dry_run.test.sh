@@ -48,10 +48,10 @@ done
 # AND we make a dry backup run with blubee
 ./blubee -b "$backup_json" dry backup
 
-result_dir="$backup_dir/$name"
-test_results=""
+# THEN blubee ran without crashing
+test_results="$?"
 
-# THEN there is no backup directory created
+# AND there is no backup directory created
 test_results="$test_results $(assert_no_path "$backup_dir")"
 
 # AND the backuped directory maintains the changes

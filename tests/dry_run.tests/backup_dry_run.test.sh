@@ -36,9 +36,10 @@ echo "\
 cd ../..
 ./blubee -b "$test_dir/$backup_json" dry backup
 
-test_results=""
+# THEN blubee ran without crashing
+test_results="$?"
 
-# THEN there are no backup directory
+# AND there are no backup directory
 test_results="$test_results $(assert_no_path "$backup_dir")"
 
 # AND the original files are untouched

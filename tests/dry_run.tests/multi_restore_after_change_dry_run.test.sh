@@ -78,9 +78,10 @@ echo "new file" > "$source_root/dir3/new-file-no-backup"
 # WHEN we restore the backup
 ./blubee -b "$backup_json" -c "$config_path" dry restore
 
-test_results=""
+# THEN blubee ran without crashing
+test_results="$?"
 
-# THEN the backuped directory retains its latest changes
+# AND the backuped directory retains its latest changes
 test_results="$test_results $(assert_dirs_equal "$source_root" "$test_dir/multi_restore_after_change_dry_run.expected/root")"
 
 # AND the backup is untouched

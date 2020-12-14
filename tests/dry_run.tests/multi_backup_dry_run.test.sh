@@ -47,9 +47,10 @@ echo "$json" > $backup_json
 cd ../..
 ./blubee -b "$backup_json" dry backup
 
-test_results=""
+# THEN blubee ran without crashing
+test_results="$?"
 
-# THEN there is no backup directory created
+# AND there is no backup directory created
 test_results="$test_results $(assert_no_path "$backup_dir")"
 
 # AND the backuped directory has not been changed
