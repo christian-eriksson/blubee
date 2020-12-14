@@ -15,6 +15,7 @@ print_help() {
     echo "options:"
     echo "\t-b <backup-json>\tpath to backup config"
     echo "\t-c <config-file>\tpath to custom blubee config"
+    echo "\t-n <config-name>\tname of a specific backup config from the backup json"
     echo "\t-h\t\t\tprint this help"
 }
 
@@ -23,12 +24,14 @@ panic() {
     exit 1
 }
 
-while getopts ":hb:c:" option; do
+while getopts ":hb:c:n:" option; do
     case "${option}" in
         b)
             backup_json_file=$OPTARG;;
         c)
             config_file=$OPTARG;;
+        n)
+            restore_config_name=$OPTARG;;
         h)
             panic
             ;;
@@ -92,7 +95,8 @@ backup() {
 restore() {
     backup_json="$1"
     [ ! -z "$2" ] && restore_backup_copy="-b $2"
-    additional_options="$3"
+    [ ! -z "$3" ] && name="$3"
+    additional_options="$4"
 
     backups_path=$(get_json_element '.backup_destination' "$backup_json")
     [ -z "$backups_path" ] && echo "No backup destination path in 'backup.json'!" && panic
@@ -103,10 +107,13 @@ restore() {
     config_index=0
     while [ "$config_index" -lt "$configs_count" ]; do
         config=$(get_list_item "$backup_configs" "$config_index")
+        config_index=$((config_index + 1))
 
         config_name=$(get_json_element ".name" "$config")
         [ -z "$config_name" ] && echo "Can not have config without name in 'backup.json'" && panic
         config_name=$(trim_left_slash "$(dequote_string "$config_name")")
+
+        [ ! -z "$name" ] && [ "$config_name" != "$name" ] && continue
 
         restore_path=$(get_json_element ".root" "$config")
         [ -z "$restore_path" ] && echo "No source root for config '$config_name'!" && panic
@@ -120,8 +127,8 @@ restore() {
         ./restore.sh -r "$restore_path" -s "$backups_path/$config_name" -p "$sources" $restore_backup_copy $additional_options
         exit_code=$?
         [ "$exit_code" -ne "0" ] && exit $exit_code
-        config_index=$((config_index + 1))
     done
+    exit 0
 }
 
 backup_config_json=$(cat $backup_json_file)
@@ -130,7 +137,7 @@ case "$command" in
         backup "$backup_config_json"
         ;;
     restore)
-        restore "$backup_config_json" "$RESTORE_BACKUP_COPY"
+        restore "$backup_config_json" "$RESTORE_BACKUP_COPY" "$restore_config_name"
         exit $?
         ;;
     dry)
@@ -142,7 +149,7 @@ case "$command" in
                 backup "$backup_config_json" "-x"
                 ;;
             restore)
-                restore "$backup_config_json" "$RESTORE_BACKUP_COPY" "-x"
+                restore "$backup_config_json" "$RESTORE_BACKUP_COPY" "$restore_config_name" "-x"
                 exit $?
                 ;;
             *)
