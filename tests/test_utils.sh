@@ -1,5 +1,18 @@
 #!/bin/sh
 
+get_a_backup_datetime() {
+    backup_path="$(trim_right_slash $1)"
+    for dir in $backup_path/*/; do
+        [ -d "$dir" ] || continue
+        dir_no_slash="$(trim_right_slash "$dir")"
+        dir_name="$(get_path_name "$dir_no_slash")"
+        if [ "$dir_name" != "latest" ]; then
+            datetime="$dir_name"
+        fi
+    done
+    echo "$datetime"
+}
+
 count() {
     [ -e "$1" ] && printf '%s\n' "$#" || printf '%s\n' 0
 }

@@ -32,3 +32,9 @@ trim_to_first_right_slash() {
     echo $string
 }
 
+get_path_name() {
+    path="$1"
+    name=${path##*/}
+    echo "$name"
+}
+
