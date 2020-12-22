@@ -16,6 +16,7 @@ print_help() {
     echo "\t-b <backup-json>\tpath to backup config"
     echo "\t-c <config-file>\tpath to custom blubee config"
     echo "\t-n <config-name>\tname of a specific backup config from the backup json"
+    echo "\t-d <backup-datetme>\tthe datetime stamp of the backup to be restored, ignored during backup"
     echo "\t-h\t\t\tprint this help"
 }
 
@@ -153,7 +154,7 @@ case "$command" in
                 backup "$backup_config_json" "-x"
                 ;;
             restore)
-                restore "$backup_config_json" "$RESTORE_BACKUP_COPY" "$restore_config_name" "" "-x"
+                restore "$backup_config_json" "$RESTORE_BACKUP_COPY" "$restore_config_name" "$backup_datetime" "-x"
                 exit $?
                 ;;
             *)

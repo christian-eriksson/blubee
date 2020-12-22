@@ -124,10 +124,10 @@ You should have a `backup.json` as described above, to restore the backup create
 blubee -b <path-to-backup.json> restore
 ```
 
-The data will be restored to the root+path combinations specified in `<backup.json>`. To restore a specific backup config from the `backup.json` use the `-n` option with the name of the config:
+The data will be restored to the root+path combinations specified in `<backup.json>`. To restore a specific backup config from the `backup.json` use the `-n` option with the name of the config. If you want to restore a backup from a specific point in time, use the `-d` option:
 
 ```
-blubee -b <path-to-backup.json> -n <config-name> restore
+blubee -b <path-to-backup.json> [-n <config-name> -d <datetime-of-backup>] restore
 ```
 
 ## Dry run command

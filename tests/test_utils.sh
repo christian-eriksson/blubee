@@ -80,3 +80,22 @@ assert_no_path() {
     [ ! -e "$path" ]
     echo "$?"
 }
+
+assert_empty_string() {
+    string="$1"
+    if [ -z "$string" ]; then
+        echo "0"
+    else
+        echo "1"
+    fi
+}
+
+assert_non_empty_string() {
+    string="$1"
+    if [ -z "$string" ]; then
+        echo "1"
+    else
+        echo "0"
+    fi
+}
+
