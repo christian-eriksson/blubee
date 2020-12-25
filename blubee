@@ -32,7 +32,7 @@ while getopts ":hb:c:n:d:" option; do
         c)
             config_file=$OPTARG;;
         n)
-            restore_config_name=$OPTARG;;
+            config_name=$OPTARG;;
         d)
             backup_datetime=$OPTARG;;
         h)
@@ -64,7 +64,8 @@ fi
 
 backup() {
     backup_json="$1"
-    additional_options="$2"
+    backup_name="$2"
+    additional_options="$3"
 
     backup_configs=$(get_json_element '.backup_configs' "$backup_json")
 
@@ -76,10 +77,13 @@ backup() {
     config_index=0
     while [ "$config_index" -lt "$configs_count" ]; do
         config=$(get_list_item "$backup_configs" "$config_index")
+        config_index=$((config_index + 1))
 
         config_name=$(get_json_element ".name" "$config")
         [ -z "$config_name" ] && echo "Can not have config without name in 'backup.json'" && panic
         config_name=$(trim_left_slash "$(dequote_string "$config_name")")
+
+        [ ! -z "$backup_name" ] && [ "$config_name" != "$backup_name" ] && continue
 
         source_root=$(get_json_element ".root" "$config")
         [ -z "$source_root" ] && echo "No source root for config '$config_name'!" && panic
@@ -90,15 +94,14 @@ backup() {
         sources=$(extract_json_list "$sources_list")
         [ -z "$sources" ] && echo "No sources in config '$config_name'!" && panic
 
-        ./backup.sh -r "$source_root" -s "$sources"  -d "$destination_path/$config_name" $additional_options
-        config_index=$((config_index + 1))
+        ./backup.sh -r "$source_root" -s "$sources" -d "$destination_path/$config_name" $additional_options
     done
 }
 
 restore() {
     backup_json="$1"
     [ ! -z "$2" ] && restore_backup_copy="-b $2"
-    [ ! -z "$3" ] && name="$3"
+    [ ! -z "$3" ] && restore_name="$3"
     [ ! -z "$4" ] && restore_datetime="-d $4"
     additional_options="$5"
 
@@ -117,7 +120,7 @@ restore() {
         [ -z "$config_name" ] && echo "Can not have config without name in 'backup.json'" && panic
         config_name=$(trim_left_slash "$(dequote_string "$config_name")")
 
-        [ ! -z "$name" ] && [ "$config_name" != "$name" ] && continue
+        [ ! -z "$restore_name" ] && [ "$config_name" != "$restore_name" ] && continue
 
         restore_path=$(get_json_element ".root" "$config")
         [ -z "$restore_path" ] && echo "No source root for config '$config_name'!" && panic
@@ -139,10 +142,10 @@ restore() {
 backup_config_json=$(cat $backup_json_file)
 case "$command" in
     backup)
-        backup "$backup_config_json"
+        backup "$backup_config_json" "$config_name"
         ;;
     restore)
-        restore "$backup_config_json" "$RESTORE_BACKUP_COPY" "$restore_config_name" "$backup_datetime"
+        restore "$backup_config_json" "$RESTORE_BACKUP_COPY" "$config_name" "$backup_datetime"
         exit $?
         ;;
     dry)
@@ -151,10 +154,10 @@ case "$command" in
         sub_command=$(echo $@ | cut -d' ' -f$sub_command_index)
         case "$sub_command" in
             backup)
-                backup "$backup_config_json" "-x"
+                backup "$backup_config_json" "" "-x"
                 ;;
             restore)
-                restore "$backup_config_json" "$RESTORE_BACKUP_COPY" "$restore_config_name" "$backup_datetime" "-x"
+                restore "$backup_config_json" "$RESTORE_BACKUP_COPY" "$config_name" "$backup_datetime" "-x"
                 exit $?
                 ;;
             *)
