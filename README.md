@@ -115,6 +115,11 @@ The result of a backup performed with the example `backup.json` in year 2020 on 
 
 **NOTE: Avoid keeping overlapping root+path combinations in your backup configs, it is easy to create backups that, when restored, will overwrite each other!!**
 
+You can choose to only create a backup of a single config in the `backup.json` by providing the `-n` option with the name of the config.
+
+```
+blubee -b <path-to-backup.json> [-n <config-name>] backup
+```
 
 ## Restoring Backups
 
