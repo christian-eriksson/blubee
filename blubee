@@ -94,6 +94,8 @@ backup() {
         sources=$(extract_json_list "$sources_list")
         [ -z "$sources" ] && echo "No sources in config '$config_name'!" && panic
 
+        echo "dry run backup"
+        echo "/backup.sh -r \"$source_root\" -s \"$sources\" -d \"$destination_path/$config_name\" $additional_option"
         ./backup.sh -r "$source_root" -s "$sources" -d "$destination_path/$config_name" $additional_options
     done
 }
@@ -154,7 +156,7 @@ case "$command" in
         sub_command=$(echo $@ | cut -d' ' -f$sub_command_index)
         case "$sub_command" in
             backup)
-                backup "$backup_config_json" "" "-x"
+                backup "$backup_config_json" "$config_name" "-x"
                 ;;
             restore)
                 restore "$backup_config_json" "$RESTORE_BACKUP_COPY" "$config_name" "$backup_datetime" "-x"
