@@ -94,8 +94,6 @@ backup() {
         sources=$(extract_json_list "$sources_list")
         [ -z "$sources" ] && echo "No sources in config '$config_name'!" && panic
 
-        echo "dry run backup"
-        echo "/backup.sh -r \"$source_root\" -s \"$sources\" -d \"$destination_path/$config_name\" $additional_option"
         ./backup.sh -r "$source_root" -s "$sources" -d "$destination_path/$config_name" $additional_options
     done
 }
