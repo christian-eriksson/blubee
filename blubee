@@ -66,12 +66,17 @@ backup() {
     backup_json="$1"
     backup_name="$2"
     additional_options="$3"
-
     backup_configs=$(get_json_element '.backup_configs' "$backup_json")
 
     destination_path=$(get_json_element ".backup_destination" "$backup_json")
     [ -z "$destination_path" ] && echo "No backup destination path in 'backup.json'!" && panic
     destination_path=$(trim_right_slash "$(dequote_string "$destination_path")")
+
+    destination_user=$(dequote_string "$(get_json_element ".destination_user" "$backup_json")")
+    [ ! -z "$destination_user" ] && destination_user="-u $destination_user"
+    destination_host=$(dequote_string "$(get_json_element ".destination_host" "$backup_json")")
+    [ ! -z "$destination_user" ] && [ -z $destination_host ] && echo "A destination host must be present in the 'backup.json' if a user is present!" && panic
+    [ ! -z "$destination_host" ] && destination_host="-h $destination_host"
 
     configs_count=$(list_length "$backup_configs")
     config_index=0
@@ -94,7 +99,7 @@ backup() {
         sources=$(extract_json_list "$sources_list")
         [ -z "$sources" ] && echo "No sources in config '$config_name'!" && panic
 
-        ./backup.sh -r "$source_root" -s "$sources" -d "$destination_path/$config_name" $additional_options
+        ./backup.sh -r "$source_root" -s "$sources" $destination_user $destination_host -d "$destination_path/$config_name" $additional_options
     done
 }
 

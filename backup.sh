@@ -4,7 +4,7 @@
 
 exclude_file=.backup_ignore
 
-while getopts ":e:s:d:r:x" option; do
+while getopts ":e:s:d:r:xh:u:" option; do
     case "${option}" in
         e)
             exclude_file=${OPTARG};;
@@ -16,6 +16,10 @@ while getopts ":e:s:d:r:x" option; do
             source_root=${OPTARG};;
         x)
             dry_run="--dry-run";;
+        u)
+            user=${OPTARG};;
+        h)
+            host=${OPTARG};;
         :)
             echo "Missing argument for option $OPTARG"
             exit 1;;
@@ -39,6 +43,11 @@ if [ -z "$destination_root" ]; then
     exit 1
 fi
 
+if [ ! -z "$user" ] && [ -z "$host" ]; then
+    echo "host is not optional if user is provided, use option -h <user>-"
+    exit 1
+fi
+
 source_root=$(trim_right_slash $source_root)
 destination_root=$(trim_right_slash $destination_root)
 
@@ -49,6 +58,9 @@ backup_path="$destination_root/$datetime"
 latest_link="$destination_root/latest"
 
 [ ! -L $latest_link ] && echo "First backup! Link to latest previous backup does not exist, it will be created."
+
+[ ! -z $user ] && remote_prefix="$user@"
+[ ! -z $host ] && remote_prefix="$remote_prefix$host:"
 
 for source_path in $source_paths; do
     source_suffix=$(trim_right_slash "$(trim_left_slash "$source_path")")
@@ -61,7 +73,7 @@ for source_path in $source_paths; do
         --link-dest "$latest_link/$backup_path_suffix" \
         --exclude-from "$exclude_file" \
         "$source" \
-        "$destination"
+        "$remote_prefix$destination"
 done
 
 if [ -z "$dry_run" ]; then

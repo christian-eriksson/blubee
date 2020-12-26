@@ -53,6 +53,27 @@ The backup configs specify which files to backup. Each config specifies a `root`
 
 **NOTE**: Careful when creating configs, blubee runs the `rsync` command with the --delete option so overlapping root+path combinations in the configs may result in dataloss. Use at your own risk! To minimize the risk, deleted and changed files are saved to `/var/local/blubee/backups`.
 
+### Object definition
+
+The `backup.json` consists of an object with the properties in the following tables:
+
+| name                 | type              | description                                                           |
+| -------------------- | ----------------- | --------------------------------------------------------------------- |
+| `backup_destination` | `string`          | path to where blubee will create the backups                          |
+| `backup_configs`     | `backup_config[]` | list of backup config objects                                         |
+| `destination_host`   | `string`          | address (eg. IP or domain name) to host with the `backup_destination` |
+| `destination_user`   | `string`          | user on `destination_host` which will create the backup               |
+
+#### `backup_config` object
+
+The `backup_config` object defines a backup in terms of source of content and name.
+
+| name    | type       | description                                                             |
+| ------- | ---------- | ----------------------------------------------------------------------- |
+| `name`  | `string`   | name of the backup, and the directory containing the config's backups   |
+| `root`  | `string`   | will be prepended to all `paths`, building the absolute paths to backup |
+| `paths` | `string[]` | list of paths to backup, the paths should all originate from the root   |
+
 ## Configuration
 
 You may configure blubee by passing a custom config using the `-c` option. This file will hold variables like this:
