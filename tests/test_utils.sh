@@ -1,5 +1,11 @@
 #!/bin/sh
 
+activate_mock() {
+    binary_to_mock="$1"
+    test_root="$2"
+    PATH=$test_root/mocks/$binary_to_mock:$PATH
+}
+
 get_a_backup_datetime() {
     backup_path="$(trim_right_slash $1)"
     for dir in $backup_path/*/; do
