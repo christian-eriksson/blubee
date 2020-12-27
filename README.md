@@ -76,7 +76,7 @@ The `backup_config` object defines a backup in terms of source of content and na
 
 ## Configuration
 
-You may configure blubee by passing a custom config using the `-c` option. This file will hold variables like this:
+You need to pass a config file using the `-c` option for blubee to know where vital files are. This file will hold variables like this:
 
 ```sh
 RESTORE_BACKUP_PATH=/some/path
@@ -84,16 +84,16 @@ RESTORE_BACKUP_PATH=/some/path
 
 Possible variables for the config are:
 
-| Variable              | Description                                                                                     |
-| --------------------- | ----------------------------------------------------------------------------------------------- |
-| `RESTORE_BACKUP_PATH` | An absolute path where blubee will store files that were changed or deleted during last restore |
+| Variable              | Description                                                                     |
+| --------------------- | ------------------------------------------------------------------------------- |
+| `RESTORE_BACKUP_PATH` | Path where blubee stores files that were changed or deleted during last restore |
 
 ## Creating Backups
 
-Blubee can create backups on a local machine aswell as pushing a backup to a remote machine. To create a backup create a `backup.json` as described above and run:
+Blubee can create backups on a local machine aswell as pushing a backup to a remote machine. To create a backup, create a `backup.json` as described above and run:
 
 ```
-blubee -b <path-to-backup.json> backup
+blubee -c <blubee-config> -b <path-to-backup.json> backup
 ```
 
 Given a file structure like this:
@@ -139,7 +139,7 @@ The result of a backup performed with the example `backup.json` in year 2020 on 
 You can choose to only create a backup of a single config in the `backup.json` by providing the `-n` option with the name of the config.
 
 ```
-blubee -b <path-to-backup.json> [-n <config-name>] backup
+blubee -c <blubee-config> -b <path-to-backup.json> [-n <config-name>] backup
 ```
 
 ## Restoring Backups
@@ -147,13 +147,13 @@ blubee -b <path-to-backup.json> [-n <config-name>] backup
 Blubee can restore backups from your local machine as well as pulling backups from a remote machine. You should have a `backup.json` as described above, to restore the backup created in the example above run:
 
 ```
-blubee -b <path-to-backup.json> restore
+blubee -c <blubee-config> -b <path-to-backup.json> restore
 ```
 
 The data will be restored to the root+path combinations specified in `<backup.json>`. To restore a specific backup config from the `backup.json` use the `-n` option with the name of the config. If you want to restore a backup from a specific point in time, use the `-d` option:
 
 ```
-blubee -b <path-to-backup.json> [-n <config-name> -d <datetime-of-backup>] restore
+blubee -c <blubee-config> -b <path-to-backup.json> [-n <config-name> -d <datetime-of-backup>] restore
 ```
 
 ## Dry run command
@@ -161,7 +161,7 @@ blubee -b <path-to-backup.json> [-n <config-name> -d <datetime-of-backup>] resto
 To inspect what would happen during a backup or restore you can use the dry command.
 
 ```
-blubee -b <path-to-backup.json> dry [backup|restore]
+blubee -c <blubee-config> -b <path-to-backup.json> dry [backup|restore]
 ```
 
 This would show you a list of files that would be changed/created and/or deleted if run without the `dry` command.
