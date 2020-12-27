@@ -55,7 +55,6 @@ echo "$json" > $backup_json
 # WHEN we run blubee
 cd ../..
 output=$(./blubee -b "$backup_json" backup)
-echo "OUTPUT: $output"
 test_results=""
 
 # THEN blubee prepends the remote user and host to the backup destination
