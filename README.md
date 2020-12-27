@@ -90,7 +90,7 @@ Possible variables for the config are:
 
 ## Creating Backups
 
-To create a backup create a `backup.json` as described above and run:
+Blubee can create backups on a local machine aswell as pushing a backup to a remote machine. To create a backup create a `backup.json` as described above and run:
 
 ```
 blubee -b <path-to-backup.json> backup
@@ -144,7 +144,7 @@ blubee -b <path-to-backup.json> [-n <config-name>] backup
 
 ## Restoring Backups
 
-You should have a `backup.json` as described above, to restore the backup created in the example above run:
+Blubee can restore backups from your local machine as well as pulling backups from a remote machine. You should have a `backup.json` as described above, to restore the backup created in the example above run:
 
 ```
 blubee -b <path-to-backup.json> restore
