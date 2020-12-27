@@ -114,6 +114,12 @@ restore() {
     [ -z "$backups_path" ] && echo "No backup destination path in 'backup.json'!" && panic
     backups_path=$(trim_right_slash "$(dequote_string "$backups_path")")
 
+    destination_user=$(dequote_string "$(get_json_element ".destination_user" "$backup_json")")
+    [ ! -z "$destination_user" ] && destination_user="-u $destination_user"
+    destination_host=$(dequote_string "$(get_json_element ".destination_host" "$backup_json")")
+    [ ! -z "$destination_user" ] && [ -z $destination_host ] && echo "A destination host must be present in the 'backup.json' if a user is present!" && panic
+    [ ! -z "$destination_host" ] && destination_host="-h $destination_host"
+
     backup_configs=$(get_json_element '.backup_configs' "$backup_json")
     configs_count=$(list_length "$backup_configs")
     config_index=0
@@ -137,6 +143,7 @@ restore() {
         [ -z "$sources" ] && echo "No sources in config '$config_name'!" && panic
 
         ./restore.sh -r "$restore_path" -s "$backups_path/$config_name" -p "$sources" \
+            $destination_user $destination_host \
             $restore_datetime $restore_backup_copy $additional_options
         exit_code=$?
         [ "$exit_code" -ne "0" ] && exit $exit_code

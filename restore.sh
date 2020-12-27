@@ -6,7 +6,7 @@ datetime_of_snapshot="latest"
 
 backup_copy_path="/var/local/blubee/backups"
 
-while getopts ":r:p:d:s:b:x" option; do
+while getopts ":r:p:d:s:b:xu:h:" option; do
     case "${option}" in
         r)
             restore_root=${OPTARG};;
@@ -20,6 +20,10 @@ while getopts ":r:p:d:s:b:x" option; do
             dry_run="--dry-run";;
         b)
             backup_copy_path=$(trim_right_slash ${OPTARG});;
+        u)
+            user=${OPTARG};;
+        h)
+            host=${OPTARG};;
         :)
             echo "Missing argument for option '$OPTARG'"
             exit 1
@@ -39,18 +43,26 @@ if [ -z "$backup_source_path" ]; then
     exit 1
 fi
 
+if [ ! -z "$user" ] && [ -z "$host" ]; then
+    echo "host is not optional if user is provided, use option -h <user>-"
+    exit 1
+fi
+
 [ ! -w "$backup_copy_path" ] && echo "Don't have permissions to write to '$backup_copy_path', rectify this and try again" && exit 1
 
 backup_source_path=$(trim_right_slash "$backup_source_path")
 datetime_of_snapshot=$(trim_right_slash "$(trim_left_slash "$datetime_of_snapshot")")
 restore_root=$(trim_right_slash "$restore_root")
 
+[ ! -z $user ] && remote_prefix="$user@"
+[ ! -z $host ] && remote_prefix="$remote_prefix$host:"
+
 for restore_path in $restore_paths; do
     source_suffix=$(trim_right_slash "$(trim_left_slash "$restore_path")")
     restore_path_suffix=$(trim_to_first_right_slash "$source_suffix")
     rsync -aE --progress --delete $dry_run --backup \
         --backup-dir "$backup_copy_path/$datetime_of_snapshot/$restore_path_suffix" \
-        "$backup_source_path/$datetime_of_snapshot/$source_suffix" \
+        "$remote_prefix$backup_source_path/$datetime_of_snapshot/$source_suffix" \
         "$restore_root/$restore_path_suffix"
 done
 
