@@ -52,7 +52,7 @@ rm "$root_copy/dir2/file4"
 
 # AND have taken a backup
 cd ../../
-./blubee -b "$backup_json" backup
+./blubee -c "$config_path" -b "$backup_json" backup
 
 # AND we make some new changes
 rm $root_copy/file2

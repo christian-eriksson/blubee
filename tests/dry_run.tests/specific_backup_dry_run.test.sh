@@ -43,9 +43,17 @@ EOM
 )
 echo "$json" > $backup_json
 
+# AND a config with a RESTORE_BACKUP_COPY variable
+config_path="$test_dir/multi_backup_dry_run.config"
+restore_backup_copy_path="$test_dir/multi_backup_dry_run.restore_backup"
+mkdir $restore_backup_copy_path
+echo "\
+RESTORE_BACKUP_COPY=$restore_backup_copy_path
+" > $config_path
+
 # WHEN we make a dry run with blubee
 cd ../..
-output=$(./blubee -b "$backup_json" -n "$name_two" dry backup)
+output=$(./blubee -c "$config_path" -b "$backup_json" -n "$name_two" dry backup)
 
 # THEN blubee ran without crashing
 test_results="$?"
@@ -71,4 +79,5 @@ echo "$(asserts_to_text "$test_results")"
 # clean up
 [ -e "$backup_dir" ] && rm -r "$backup_dir"
 rm "$backup_json"
+rm "$config_path"
 rm -r "$root_copy"

@@ -33,11 +33,19 @@ echo "\
 }\
 " > $backup_json
 
+# AND a config with a RESTORE_BACKUP_COPY variable
+config_path="$test_dir/consecutive_backups.config"
+restore_backup_copy_path="$test_dir/consecutive_backups.restore_backup"
+mkdir $restore_backup_copy_path
+echo "\
+RESTORE_BACKUP_COPY=$restore_backup_copy_path
+" > $config_path
+
 # change to blubee root path
 cd ../..
 
 # when we run blubee
-./blubee -b "$test_dir/$backup_json" backup
+./blubee -c "$config_path" -b "$test_dir/$backup_json" backup
 
 # and we change a few files
 files="file1 dir1/sub_dir/file7 dir2/file5"
@@ -49,7 +57,7 @@ done
 sleep 1
 
 # and we run blubee
-./blubee -b "$test_dir/$backup_json" backup
+./blubee -c "$config_path" -b "$test_dir/$backup_json" backup
 
 result_dir="$backup_dir/$name"
 test_restults=""
@@ -74,4 +82,6 @@ echo "$(asserts_to_text "$test_results")"
 # clean up
 rm -r "$backup_dir"
 rm "$test_dir/$backup_json"
+rm "$config_path"
 rm -r $root_copy
+

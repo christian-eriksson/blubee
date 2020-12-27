@@ -39,9 +39,17 @@ EOM
 )
 echo "$json" > $backup_json
 
+# AND a config with a RESTORE_BACKUP_COPY variable
+config_path="$test_dir/possible_to_pass_backup_copy_path_in_config.config"
+restore_backup_copy_path="$test_dir/possible_to_pass_backup_copy_path_in_config.restore_backup"
+mkdir $restore_backup_copy_path
+echo "\
+RESTORE_BACKUP_COPY=$restore_backup_copy_path
+" > $config_path
+
 # WHEN we run blubee
 cd ../..
-output=$(./blubee -b "$backup_json" backup)
+output=$(./blubee -c "$config_path" -b "$backup_json" backup)
 
 # THEN blubee throws an error
 test_result="$(assert_not_equal "$?" 0)"
@@ -53,4 +61,5 @@ echo "$(asserts_to_text "$test_result")"
 rm -r "$root_copy"
 [ -e "$backup_dir" ] && rm -r "$backup_dir"
 rm "$backup_json"
+rm "$config_path"
 

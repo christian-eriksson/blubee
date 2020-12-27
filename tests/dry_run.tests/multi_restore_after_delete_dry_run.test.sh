@@ -56,7 +56,7 @@ cp -r "$test_dir/test_files_root" "$source_root"
 cd ../..
 
 # AND we have created a backup
-./blubee -b "$backup_json" backup
+./blubee -c "$config_path" -b "$backup_json" backup
 
 # AND we accidentally deleted the original directory
 rm -r $source_root

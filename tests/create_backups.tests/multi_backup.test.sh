@@ -38,11 +38,19 @@ echo "\
 }\
 " > $backup_json
 
+# AND a config with a RESTORE_BACKUP_COPY variable
+config_path="$test_dir/multi_backup.config"
+restore_backup_copy_path="$test_dir/multi_backup.restore_backup"
+mkdir $restore_backup_copy_path
+echo "\
+RESTORE_BACKUP_COPY=$restore_backup_copy_path
+" > $config_path
+
 # AND we are in blubee root path
 cd ../..
 
 # WHEN we run blubee
-./blubee -b "$test_dir/$backup_json" backup
+./blubee -c "$config_path" -b "$test_dir/$backup_json" backup
 
 test_results=""
 
@@ -70,4 +78,5 @@ echo "$(asserts_to_text "$test_results")"
 # clean up
 rm -r "$destination"
 rm "$test_dir/$backup_json"
+rm "$config_path"
 

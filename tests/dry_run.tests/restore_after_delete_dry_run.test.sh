@@ -42,7 +42,7 @@ RESTORE_BACKUP_COPY=$restore_backup_copy_path
 
 # AND have taken a backup
 cd ../../
-./blubee -b "$backup_json" backup
+./blubee -c "$config_path" -b "$backup_json" backup
 
 # And we delete the backuped directory
 rm -r $root_copy

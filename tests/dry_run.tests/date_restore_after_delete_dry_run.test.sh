@@ -45,7 +45,7 @@ RESTORE_BACKUP_COPY=$restore_backup_copy_path
 
 # AND have taken a backup
 cd ../../
-./blubee -b "$backup_json" backup
+./blubee -c "$config_path" -b "$backup_json" backup
 
 # AND we note the date of the first backup
 first_backup_datetime=$(get_a_backup_datetime "$backup_dir/$name")
@@ -64,7 +64,7 @@ echo "new file" > "$root_copy/dir1/sub_dir/new-dir/a_new_file"
 rm "$root_copy/dir2/file4"
 
 # AND we take another backup
-./blubee -b "$backup_json" backup
+./blubee -c "$config_path" -b "$backup_json" backup
 
 # And we delete the backuped directory
 rm -r $root_copy

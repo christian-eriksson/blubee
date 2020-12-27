@@ -65,7 +65,7 @@ rm "$source_root/dir2/file4"
 
 # AND we have created a backup
 cd ../..
-./blubee -b "$backup_json" backup
+./blubee -c "$config_path" -b "$backup_json" backup
 
 # AND we note the date of the first backup
 first_backup_datetime=$(get_a_backup_datetime "$destination/$name_one")
@@ -84,7 +84,7 @@ echo "new file" > "$source_root/dir2/sub_dir/another-new-file"
 echo "new file" > "$source_root/dir1/sub_dir/another-new-file"
 
 # AND we take another backup
-./blubee -b "$backup_json" backup
+./blubee -c "$config_path" -b "$backup_json" backup
 
 # AND we make a last change
 rm $source_root/dir2/sub_dir/another-new-file

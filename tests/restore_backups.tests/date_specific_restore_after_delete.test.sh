@@ -55,7 +55,7 @@ cp -r "$test_dir/test_files_root" "$source_root"
 
 # AND we have created a backup
 cd ../..
-./blubee -b "$backup_json" backup
+./blubee -c "$config_path" -b "$backup_json" backup
 
 # AND we note the date of the first backup
 first_backup_datetime=$(get_a_backup_datetime "$destination/$name_two")
@@ -74,7 +74,7 @@ echo "new file" > "$source_root/dir1/sub_dir/new-dir/a_new_file"
 rm "$source_root/dir2/file4"
 
 # AND we take another backup
-./blubee -b "$backup_json" backup
+./blubee -c "$config_path" -b "$backup_json" backup
 
 # AND we accidentally deleted the original directory
 rm -r $source_root

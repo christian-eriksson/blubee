@@ -63,7 +63,7 @@ rm "$source_root/dir2/file4"
 
 # AND we have created a backup
 cd ../..
-./blubee -b "$backup_json_path" backup
+./blubee -c "$config_path" -b "$backup_json_path" backup
 
 # AND we make some new changes
 rm $source_root/file2

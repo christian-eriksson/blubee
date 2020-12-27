@@ -56,7 +56,7 @@ echo "new file" > "$root_copy/dir1/sub_dir/new-dir/a_new_file"
 rm "$root_copy/dir2/file4"
 
 # AND we have taken a backup
-./blubee -b "$test_dir/$backup_json" backup
+./blubee -c "$config_path" -b "$test_dir/$backup_json" backup
 
 # AND we note the date of the first backup
 first_backup_datetime=$(get_a_backup_datetime "$backup_dir/$name")
@@ -72,7 +72,7 @@ for file in $files; do
 done
 
 # AND we take another backup
-./blubee -b "$test_dir/$backup_json" backup
+./blubee -c "$config_path" -b "$test_dir/$backup_json" backup
 
 # WHEN we restore the backup
 ./blubee -b "$test_dir/$backup_json" -c "$config_path" -d "$first_backup_datetime" restore

@@ -41,9 +41,17 @@ EOM
 )
 echo "$json" > $backup_json
 
+# AND a config with a RESTORE_BACKUP_COPY variable
+config_path="$test_dir/remote_destination_host_only_single_backup.config"
+restore_backup_copy_path="$test_dir/remote_destination_host_only_single_backup.restore_backup"
+mkdir $restore_backup_copy_path
+echo "\
+RESTORE_BACKUP_COPY=$restore_backup_copy_path
+" > $config_path
+
 # WHEN we run blubee
 cd ../..
-output=$(./blubee -b "$backup_json" backup)
+output=$(./blubee -c "$config_path" -b "$backup_json" backup)
 test_results=""
 
 # THEN blubee prepends the remote user and host to the backup destination
@@ -60,4 +68,5 @@ echo "$(asserts_to_text "$test_results")"
 rm -r "$root_copy"
 rm -r "$backup_dir"
 rm "$backup_json"
+rm "$config_path"
 

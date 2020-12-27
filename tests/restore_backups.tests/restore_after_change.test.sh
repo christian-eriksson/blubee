@@ -55,7 +55,7 @@ echo "new file" > "$root_copy/dir1/sub_dir/new-dir/a_new_file"
 rm "$root_copy/dir2/file4"
 
 # AND we have taken a backup
-./blubee -b "$test_dir/$backup_json" backup
+./blubee -c "$config_path" -b "$test_dir/$backup_json" backup
 
 # AND we make some new changes
 rm $root_copy/file2

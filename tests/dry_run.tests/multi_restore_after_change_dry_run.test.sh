@@ -65,7 +65,7 @@ rm "$source_root/dir2/file4"
 
 # AND we have created a backup
 cd ../..
-./blubee -b "$backup_json" backup
+./blubee -b "$backup_json" -c "$config_path" backup
 
 # AND we make some new changes
 rm $source_root/file2
@@ -87,7 +87,6 @@ test_results="$test_results $(assert_dirs_equal "$source_root" "$test_dir/multi_
 # AND the backup is untouched
 test_results="$test_results $(assert_dirs_equal "$destination/$name_one/latest" "$test_dir/multi_restore_after_change_dry_run.expected/backup/$name_one")"
 test_results="$test_results $(assert_dirs_equal "$destination/$name_two/latest" "$test_dir/multi_restore_after_change_dry_run.expected/backup/$name_two")"
-
 
 echo "multi_restore_after_change_dry_run.test.sh\nRESULTS:"
 echo "$(asserts_to_text "$test_results")"

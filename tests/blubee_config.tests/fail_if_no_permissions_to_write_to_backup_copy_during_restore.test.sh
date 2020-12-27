@@ -42,7 +42,7 @@ cp -r "$test_dir/test_files_root" "$source_root"
 
 # AND we have created a backup
 cd ../..
-./blubee -b "$backup_json_path" backup
+./blubee -c "$config_path" -b "$backup_json_path" backup
 
 # AND we make some new changes
 echo "first change" > "$source_root/dir1/file1"
