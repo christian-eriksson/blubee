@@ -6,6 +6,13 @@ activate_mock() {
     PATH=$test_root/mocks/$binary_to_mock:$PATH
 }
 
+activate_blubee_mock() {
+    file_to_mock="$1"
+    mocked_file="$2"
+    cp $file_to_mock $mocked_file
+    sed -i 's%/etc/blubee/blubee %../mocks/blubee/blubee %g' $mocked_file
+}
+
 get_a_backup_datetime() {
     backup_path="$(trim_right_slash $1)"
     for dir in $backup_path/*/; do
