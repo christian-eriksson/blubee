@@ -12,6 +12,8 @@ root="$test_dir/test_files_root"
 root_copy="$test_dir/test_files_root_multi_backup_dry_run.copy"
 cp -r $root $root_copy
 
+config_path="$test_dir/../test_config"
+
 # GIVEN a test backup json
 name_one="multi-one"
 name_two="multi-two"
@@ -43,14 +45,6 @@ EOM
 )
 echo "$json" > $backup_json
 
-# AND a config with a RESTORE_BACKUP_COPY variable
-config_path="$test_dir/multi_backup_dry_run.config"
-restore_backup_copy_path="$test_dir/multi_backup_dry_run.restore_backup"
-mkdir $restore_backup_copy_path
-echo "\
-RESTORE_BACKUP_COPY=$restore_backup_copy_path
-" > $config_path
-
 # WHEN we make a dry run with blubee
 cd ../..
 ./blubee -c "$config_path" -b "$backup_json" dry backup
@@ -71,5 +65,4 @@ echo "$(asserts_to_text "$test_results")"
 # clean up
 [ -e "$backup_dir" ] && rm -r "$backup_dir"
 rm "$backup_json"
-rm "$config_path"
 rm -r "$root_copy"

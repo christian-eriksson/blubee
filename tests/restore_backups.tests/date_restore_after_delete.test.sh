@@ -14,6 +14,8 @@ root="$test_dir/test_files_root"
 root_copy="$test_dir/date_restore_after_delete_root"
 cp -r $root $root_copy
 
+config_path="$test_dir/../test_config"
+
 # GIVEN a test json
 name="date-restore-delete"
 json=$(cat << EOM
@@ -35,14 +37,6 @@ json=$(cat << EOM
 EOM
 )
 echo "$json" > $backup_json
-
-# AND a config with a RESTORE_BACKUP_COPY variable
-config_path="$test_dir/date_restore_after_delete.config"
-restore_backup_copy_path="$test_dir/date_restore_after_delete.restore_backup"
-mkdir $restore_backup_copy_path
-echo "\
-RESTORE_BACKUP_COPY=$restore_backup_copy_path
-" > $config_path
 
 # AND we have taken a backup
 cd ../..
@@ -86,5 +80,3 @@ echo "$(asserts_to_text "$test_results")"
 rm -r "$backup_dir"
 rm "$backup_json"
 [ -e "$root_copy" ] && rm -r $root_copy
-rm -r "$restore_backup_copy_path"
-rm "$config_path"

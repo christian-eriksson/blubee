@@ -15,6 +15,8 @@ root="$test_dir/test_files_root"
 root_copy="$test_dir/test_files_root_remote_destination_user_only_single_backup.copy"
 cp -r $root $root_copy
 
+config_path="$test_dir/../test_config"
+
 # GIVEN a test json
 name=simple-remote
 user=test-user
@@ -39,14 +41,6 @@ EOM
 )
 echo "$json" > $backup_json
 
-# AND a config with a RESTORE_BACKUP_COPY variable
-config_path="$test_dir/possible_to_pass_backup_copy_path_in_config.config"
-restore_backup_copy_path="$test_dir/possible_to_pass_backup_copy_path_in_config.restore_backup"
-mkdir $restore_backup_copy_path
-echo "\
-RESTORE_BACKUP_COPY=$restore_backup_copy_path
-" > $config_path
-
 # WHEN we run blubee
 cd ../..
 output=$(./blubee -c "$config_path" -b "$backup_json" backup)
@@ -61,5 +55,4 @@ echo "$(asserts_to_text "$test_result")"
 rm -r "$root_copy"
 [ -e "$backup_dir" ] && rm -r "$backup_dir"
 rm "$backup_json"
-rm "$config_path"
 

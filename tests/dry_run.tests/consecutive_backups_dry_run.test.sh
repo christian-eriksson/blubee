@@ -13,6 +13,8 @@ root="$test_dir/test_files_root"
 root_copy="$test_dir/test_files_root_consecutive_backups_dry_run.copy"
 cp -r $root $root_copy
 
+config_path="$test_dir/../test_config"
+
 # GIVEN a test json
 name=consecutive
 json=$(cat << EOM
@@ -34,14 +36,6 @@ json=$(cat << EOM
 EOM
 )
 echo "$json" > $backup_json
-
-# AND a config with a RESTORE_BACKUP_COPY variable
-config_path="$test_dir/consecutive_backups_dry_run.config"
-restore_backup_copy_path="$test_dir/consecutive_backups_dry_run.restore_backup"
-mkdir $restore_backup_copy_path
-echo "\
-RESTORE_BACKUP_COPY=$restore_backup_copy_path
-" > $config_path
 
 # WHEN we make a dry backup run with blubee
 cd ../..
@@ -66,12 +60,10 @@ test_results="$test_results $(assert_no_path "$backup_dir")"
 has_same_content=$(assert_dirs_equal "$root_copy" "$test_dir/consecutive_backups_dry_run.expected")
 test_results="$test_results $has_same_content"
 
-
 echo "$script_name\nRESULTS:"
 echo "$(asserts_to_text "$test_results")"
 
 # clean up
 [ -e "$backup_dir" ] && rm -r "$backup_dir"
 rm "$backup_json"
-rm "$config_path"
 rm -r $root_copy

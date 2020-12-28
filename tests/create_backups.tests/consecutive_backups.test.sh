@@ -13,6 +13,8 @@ root="$test_dir/test_files_root"
 root_copy="$test_dir/test_files_root.copy"
 cp -r $root $root_copy
 
+config_path="$test_dir/../test_config"
+
 # given a test json
 name=consecutive
 echo "\
@@ -32,14 +34,6 @@ echo "\
     ]
 }\
 " > $backup_json
-
-# AND a config with a RESTORE_BACKUP_COPY variable
-config_path="$test_dir/consecutive_backups.config"
-restore_backup_copy_path="$test_dir/consecutive_backups.restore_backup"
-mkdir $restore_backup_copy_path
-echo "\
-RESTORE_BACKUP_COPY=$restore_backup_copy_path
-" > $config_path
 
 # change to blubee root path
 cd ../..
@@ -75,13 +69,11 @@ test_results="$test_results $(assert_is_link "$result_dir/latest")"
 has_same_content=$(assert_dirs_equal "$result_dir/latest" "$test_dir/consecutive_backups.expected")
 test_results="$test_results $has_same_content"
 
-
 echo "$script_name\nRESULTS:"
 echo "$(asserts_to_text "$test_results")"
 
 # clean up
 rm -r "$backup_dir"
 rm "$test_dir/$backup_json"
-rm "$config_path"
 rm -r $root_copy
 

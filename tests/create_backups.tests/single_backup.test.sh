@@ -8,6 +8,8 @@ cd $relative_dir
 test_dir="$(pwd)"
 backup_json="single_backup.backup.json"
 
+config_path="$test_dir/../test_config"
+
 # GIVEN a test json
 name=simple
 echo "\
@@ -27,14 +29,6 @@ echo "\
     ]
 }\
 " > $backup_json
-
-# AND a config with a RESTORE_BACKUP_COPY variable
-config_path="$test_dir/single_backup.config"
-restore_backup_copy_path="$test_dir/single_backup.restore_backup"
-mkdir $restore_backup_copy_path
-echo "\
-RESTORE_BACKUP_COPY=$restore_backup_copy_path
-" > $config_path
 
 # WHEN we run blubee
 cd ../..
@@ -62,5 +56,4 @@ echo "$(asserts_to_text "$test_results")"
 # clean up
 rm -r "$test_dir/single_backup.result"
 rm "$test_dir/$backup_json"
-rm "$config_path"
 

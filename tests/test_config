@@ -1,0 +1,3 @@
+blubee_dir="$(pwd)"
+RESTORE_BACKUP_COPY=$blubee_dir/tests/test_restore_backup
+

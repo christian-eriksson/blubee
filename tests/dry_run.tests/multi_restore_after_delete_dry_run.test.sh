@@ -8,6 +8,8 @@ cd $relative_dir
 test_dir="$(pwd)"
 backup_json="$test_dir/multi_restore_after_delete_dry_run.backup.json"
 
+config_path="$test_dir/../test_config"
+
 # GIVEN a test backup json
 name_one="multi-one"
 name_two="multi-two"
@@ -41,14 +43,6 @@ EOM
 )
 echo "$json" > $backup_json
 
-# AND a config with a RESTORE_BACKUP_COPY variable
-config_path="$test_dir/multi_restore_after_delete_dry_run.config"
-restore_backup_copy_path="$test_dir/multi_restore_after_delete_dry_run.restore_backup"
-mkdir $restore_backup_copy_path
-echo "\
-RESTORE_BACKUP_COPY=$restore_backup_copy_path
-" > $config_path
-
 # AND the source root contains some content
 cp -r "$test_dir/test_files_root" "$source_root"
 
@@ -81,6 +75,4 @@ echo "$(asserts_to_text "$test_results")"
 rm -r "$destination"
 rm "$backup_json"
 [ -e "$source_root" ] && rm -r "$source_root"
-rm -r "$restore_backup_copy_path"
-rm "$config_path"
 

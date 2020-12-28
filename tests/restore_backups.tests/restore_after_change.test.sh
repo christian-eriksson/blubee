@@ -13,6 +13,8 @@ root="$test_dir/test_files_root"
 root_copy="$test_dir/test_files_root.copy"
 cp -r $root $root_copy
 
+config_path="$test_dir/../test_config"
+
 # GIVEN a test json
 name=simple-restore
 echo "\
@@ -32,14 +34,6 @@ echo "\
     ]
 }\
 " > $backup_json
-
-# AND a config with a RESTORE_BACKUP_COPY variable
-config_path="$test_dir/restore_afer_change.config"
-restore_backup_copy_path="$test_dir/restore_afer_change.restore_backup"
-mkdir $restore_backup_copy_path
-echo "\
-RESTORE_BACKUP_COPY=$restore_backup_copy_path
-" > $config_path
 
 # AND changed to blubee root path
 cd ../..
@@ -79,5 +73,3 @@ echo "$(asserts_to_text "$test_results")"
 rm -r "$backup_dir"
 rm "$test_dir/$backup_json"
 rm -r $root_copy
-rm -r "$restore_backup_copy_path"
-rm "$config_path"

@@ -17,6 +17,8 @@ cp -r $root $root_copy
 
 activate_mock "rsync" "$test_root"
 
+config_path="$test_dir/../test_config"
+
 # GIVEN a test json
 name_one=simple-remote-one
 name_two=simple-remote-two
@@ -51,14 +53,6 @@ json=$(cat << EOM
 EOM
 )
 echo "$json" > $backup_json
-
-# AND a config with a RESTORE_BACKUP_COPY variable
-config_path="$test_dir/remote_destination_restore.config"
-restore_backup_copy_path="$test_dir/remote_destination_restore.restore_backup"
-mkdir $restore_backup_copy_path
-echo "\
-RESTORE_BACKUP_COPY=$restore_backup_copy_path
-" > $config_path
 
 # WHEN we run blubee
 cd ../..

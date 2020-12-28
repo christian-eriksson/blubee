@@ -13,6 +13,8 @@ root="$test_dir/test_files_root"
 root_copy="$test_dir/test_files_root_restore_after_change.copy"
 cp -r $root $root_copy
 
+config_path="$test_dir/../test_config"
+
 # GIVEN a test json
 name="date_dry_run_restore"
 json=$(cat << EOM
@@ -34,15 +36,6 @@ json=$(cat << EOM
 EOM
 )
 echo "$json" > $backup_json
-
-
-# AND a config with a RESTORE_BACKUP_COPY variable
-config_path="$test_dir/date_restore_after_change_dry_run.config"
-restore_backup_copy_path="$test_dir/date_restore_after_change_dry_run.restore_backup"
-mkdir $restore_backup_copy_path
-echo "\
-RESTORE_BACKUP_COPY=$restore_backup_copy_path
-" > $config_path
 
 # AND made a few changes in the directory
 mkdir "$root_copy/dir1/sub_dir/new-dir"
@@ -112,6 +105,4 @@ echo "$(asserts_to_text "$test_results")"
 # clean up
 [ -e "$backup_dir" ] && rm -r "$backup_dir"
 [ -e "$root_copy" ] && rm -r "$root_copy"
-rm -r "$restore_backup_copy_path"
 rm "$backup_json"
-rm "$config_path"

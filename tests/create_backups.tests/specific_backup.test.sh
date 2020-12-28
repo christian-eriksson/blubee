@@ -8,6 +8,8 @@ cd $relative_dir
 test_dir="$(pwd)"
 backup_json="$test_dir/specific_backup.backup.json"
 
+config_path="$test_dir/../test_config"
+
 # GIVEN a test backup json
 name_one="specific-one"
 name_two="specific-two"
@@ -41,14 +43,6 @@ EOM
 )
 echo "$json" > $backup_json
 
-# AND a config with a RESTORE_BACKUP_COPY variable
-config_path="$test_dir/specific_backup.config"
-restore_backup_copy_path="$test_dir/specific_backup.restore_backup"
-mkdir $restore_backup_copy_path
-echo "\
-RESTORE_BACKUP_COPY=$restore_backup_copy_path
-" > $config_path
-
 # AND there is data in the source to backup
 cp -r $test_dir/test_files_root $source_root
 
@@ -79,5 +73,4 @@ echo "$(asserts_to_text "$test_results")"
 rm -r "$destination"
 rm "$backup_json"
 rm -r "$source_root"
-rm "$config_path"
 
