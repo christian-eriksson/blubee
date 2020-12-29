@@ -1,0 +1,10 @@
+#!/bin/sh
+
+while getopts ":c:" option; do
+    [ "$option" = "c" ] && config_option_present=1
+done
+
+[ -z "$config_option_present" ] && config_option="-c /etc/blubee/blubee.conf "
+
+/etc/blubee/blubee "$config_option$@"
+
