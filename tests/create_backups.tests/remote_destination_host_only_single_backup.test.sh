@@ -16,6 +16,7 @@ root_copy="$test_dir/test_files_root_remote_destination_host_only_single_backup.
 cp -r $root $root_copy
 
 activate_mock "rsync" "$test_root"
+activate_mock "ssh" "$test_root"
 
 config_path="$test_dir/../test_config"
 
