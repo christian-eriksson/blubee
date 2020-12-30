@@ -1,8 +1,9 @@
 #!/bin/sh
 
-. ./string_utils.sh
+script_dir="${0%/*}"
 
 exclude_file=.backup_ignore
+. $script_dir/string_utils.sh
 
 while getopts ":e:s:d:r:xh:u:" option; do
     case "${option}" in

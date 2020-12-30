@@ -62,8 +62,10 @@ else
     . $config_file
 fi
 
-. ./json_utils.sh
-. ./string_utils.sh
+script_dir="${0%/*}"
+
+. $script_dir/json_utils.sh
+. $script_dir/string_utils.sh
 
 backup() {
     backup_json="$1"
@@ -102,7 +104,7 @@ backup() {
         sources=$(extract_json_list "$sources_list")
         [ -z "$sources" ] && echo "No sources in config '$config_name'!" && panic
 
-        ./backup.sh -r "$source_root" -s "$sources" $destination_user $destination_host -d "$destination_path/$config_name" $additional_options
+        $script_dir/backup.sh -r "$source_root" -s "$sources" $destination_user $destination_host -d "$destination_path/$config_name" $additional_options
     done
 }
 
@@ -145,7 +147,7 @@ restore() {
         sources=$(extract_json_list "$sources_list")
         [ -z "$sources" ] && echo "No sources in config '$config_name'!" && panic
 
-        ./restore.sh -r "$restore_path" -s "$backups_path/$config_name" -p "$sources" \
+        $script_dir/restore.sh -r "$restore_path" -s "$backups_path/$config_name" -p "$sources" \
             $destination_user $destination_host \
             $restore_datetime $restore_backup_copy $additional_options
         exit_code=$?

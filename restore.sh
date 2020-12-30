@@ -1,6 +1,8 @@
 #!/bin/sh
 
-. ./string_utils.sh
+script_dir="${0%/*}"
+
+. $script_dir/string_utils.sh
 
 datetime_of_snapshot="latest"
 
