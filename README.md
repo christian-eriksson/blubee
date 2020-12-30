@@ -142,6 +142,10 @@ You can choose to only create a backup of a single config in the `backup.json` b
 blubee -c <blubee-config> -b <path-to-backup.json> [-n <config-name>] backup
 ```
 
+### Credentials when creating remote backups
+
+If destination host and, optionally, user is present in the `backup.json` blubee will connect to the destination host to create the backup. It is recommended to make sure that the machine running blubee can login automatically (as the provided user) on the destination host. Otherwise you'd have to type the password for each backup config in the `backup,json`.
+
 ## Restoring Backups
 
 Blubee can restore backups from your local machine as well as pulling backups from a remote machine. You should have a `backup.json` as described above, to restore the backup created in the example above run:
@@ -155,6 +159,10 @@ The data will be restored to the root+path combinations specified in `<backup.js
 ```
 blubee -c <blubee-config> -b <path-to-backup.json> [-n <config-name> -d <datetime-of-backup>] restore
 ```
+
+### Credentials when restoring remote backups
+
+If destination host and, optionally, user is present in the `backup.json` blubee will connect to the destination host to restore the backup. It is recommended to make sure that the machine running blubee can login automatically (as the provided user) on the destination host. Otherwise you'd have to type the password for each backup config in the `backup,json`.
 
 ## Dry run command
 
