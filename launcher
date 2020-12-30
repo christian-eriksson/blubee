@@ -6,5 +6,5 @@ done
 
 [ -z "$config_option_present" ] && config_option="-c /etc/blubee/blubee.conf "
 
-/etc/blubee/blubee "$config_option$@"
+/etc/blubee/blubee $config_option$@
 
