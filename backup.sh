@@ -52,7 +52,6 @@ destination_root=$(trim_right_slash $destination_root)
 datetime="$(date '+%Y%m%d_%H%M%S')"
 
 backup_path="$destination_root/$datetime"
-[ -z "$dry_run" ] && mkdir -p $backup_path
 latest_link="$destination_root/latest"
 
 [ ! -L $latest_link ] && echo "First backup! Link to latest previous backup does not exist, it will be created."
