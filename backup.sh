@@ -2,13 +2,10 @@
 
 script_dir="${0%/*}"
 
-exclude_file=.backup_ignore
 . $script_dir/string_utils.sh
 
-while getopts ":e:s:d:r:xh:u:" option; do
+while getopts ":s:d:r:xh:u:" option; do
     case "${option}" in
-        e)
-            exclude_file=${OPTARG};;
         d)
             destination_root=${OPTARG};;
         s)
@@ -72,7 +69,6 @@ for source_path in $source_paths; do
 
     rsync -aE --progress --delete $dry_run \
         --link-dest "$latest_link/$backup_path_suffix" \
-        --exclude-from "$exclude_file" \
         "$source" \
         "$remote_prefix$destination"
 done
