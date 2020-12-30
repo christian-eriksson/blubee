@@ -119,3 +119,12 @@ assert_equal_numbers() {
         echo "1"
     fi
 }
+
+assert_greater_than() {
+    if [ $1 -gt $2 ]; then
+        echo "0"
+    else
+        echo "1"
+    fi
+}
+

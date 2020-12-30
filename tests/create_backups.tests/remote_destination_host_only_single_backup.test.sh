@@ -47,20 +47,23 @@ echo "$json" > $backup_json
 # WHEN we run blubee
 cd ../..
 output=$(./blubee -c "$config_path" -b "$backup_json" backup)
-test_results=""
+exit_code="$?"
 
-# THEN blubee prepends the remote user and host to the backup destination
-remote_calls=$(echo "$output" | grep -e "$host:$backup_dir/$name/[0-9]\{8\}_[0-9]\{6\}/" | wc -l)
+# THEN blubee ran without chrashing
+test_results="$exit_code"
+
+# AND blubee prepends the remote user and host to the backup destination
+remote_calls=$(echo "$output" | grep -e "rsync.*$host:$backup_dir/$name/[0-9]\{8\}_[0-9]\{6\}" | wc -l)
 test_results="$test_results $(assert_equal_numbers $remote_calls 4)"
 
-# AND blubee has created the expected folders for backup
-test_results="$test_results $(assert_dir_exists "$backup_dir/$name")"
+# AND blubee has created the expected folders for backup on the remote
+remote_calls=$(echo "$output" | grep -e "ssh.*$host.*mkdir.*$backup_dir/$name" | wc -l)
+test_results="$test_results $(assert_greater_than $remote_calls 0)"
 
 echo "remote_destination_host_only_single_backup.test.sh\nRESULTS:"
 echo "$(asserts_to_text "$test_results")"
 
 # clean up
 rm -r "$root_copy"
-rm -r "$backup_dir"
 rm "$backup_json"
 

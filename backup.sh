@@ -3,6 +3,7 @@
 script_dir="${0%/*}"
 
 . $script_dir/string_utils.sh
+. $script_dir/file_utils.sh
 
 while getopts ":s:d:r:xh:u:" option; do
     case "${option}" in
@@ -54,7 +55,8 @@ datetime="$(date '+%Y%m%d_%H%M%S')"
 backup_path="$destination_root/$datetime"
 latest_link="$destination_root/latest"
 
-[ ! -L $latest_link ] && echo "First backup! Link to latest previous backup does not exist, it will be created."
+message="First backup! Link to latest previous backup does not exist, it will be created."
+test_nonexistent_link "$latest_link" "$message" "$host" "$user"
 
 [ ! -z $user ] && remote_prefix="$user@"
 [ ! -z $host ] && remote_prefix="$remote_prefix$host:"
@@ -62,8 +64,8 @@ latest_link="$destination_root/latest"
 for source_path in $source_paths; do
     source_suffix=$(trim_right_slash "$(trim_left_slash "$source_path")")
     backup_path_suffix=$(trim_right_slash "$(trim_to_first_right_slash "$source_suffix")")
-    destination="$backup_path/$backup_path_suffix"
-    [ -z "$dry_run" ] && mkdir -p $destination
+    destination=$(trim_right_slash "$backup_path/$backup_path_suffix")
+    [ -z "$dry_run" ] && create_directory "$destination" "$host" "$user"
     source="$source_root/$source_suffix"
 
     rsync -aE --progress --delete $dry_run \
@@ -73,7 +75,7 @@ for source_path in $source_paths; do
 done
 
 if [ -z "$dry_run" ]; then
-    rm -rf $latest_link
-    ln -s $backup_path $latest_link
+    remove_path "$latest_link" "$host" "$user"
+    create_link "$backup_path" "$latest_link" "$host" "$user"
 fi
 
