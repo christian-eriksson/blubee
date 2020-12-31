@@ -17,6 +17,7 @@ print_help() {
     echo "\t-n <config-name>\tname of a specific backup config from the backup json"
     echo "\t-d <backup-datetme>\tthe datetime stamp of the backup to be restored, ignored during backup"
     echo "\t-h\t\t\tprint this help"
+    echo "\t-v\t\t\tprint version and build information of blubee"
 }
 
 panic() {
