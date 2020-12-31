@@ -1,3 +1,5 @@
 temp
 *.swp
 tests/test_restore_backup/*
+dist/
+

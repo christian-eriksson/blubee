@@ -1,0 +1,8 @@
+Package: blubee
+Version: -
+Maintainer: Christian Eriksson <christian.eriksson@live.se>
+Description: Simple json based backup utility.
+Homepage: https://github.com/christian-eriksson/blubee
+Architecture: all
+Depends: rsync, jq
+
