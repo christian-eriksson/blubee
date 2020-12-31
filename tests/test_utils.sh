@@ -128,3 +128,10 @@ assert_greater_than() {
     fi
 }
 
+assert_equal_files() {
+    directory_one="$1"
+    directory_two="$2"
+    diff "$directory_one" "$directory_two" > /dev/null
+    echo "$?"
+}
+
