@@ -3,7 +3,7 @@
 script_dir="${0%/*}"
 
 print_help() {
-    echo "usage: blubee -c <config-file> -b <backup.json> [options] <command>\n"
+    echo "usage: blubee [-c <config-file>] -b <backup.json> [options] <command>\n"
     echo "command:"
     echo "  backup"
     echo "\tCreate backups as described by <backup.json>.\n"
@@ -35,7 +35,9 @@ while getopts ":hb:c:n:d:v" option; do
         d)
             backup_datetime=$OPTARG;;
         h)
-            panic;;
+            print_help
+            exit 0
+            ;;
         v)
             cat $script_dir/blubee.info
             exit 0
