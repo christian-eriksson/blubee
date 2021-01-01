@@ -185,14 +185,14 @@ This would show you a list of files that would be changed/created and/or deleted
 
 Blubee allows the following options:
 
-| flag | input               | description                                                                          |
-| ---- | ------------------- | ------------------------------------------------------------------------------------ |
-| -b   | path/to/backup.json | path to backup.json as described above.                                              | 
-| -c   | path/to/config      | path to custom blubee config as described below.                                     |
-| -n   | <config-name>	     | name of a specific backup config from the backup json to restore or backup.          |
-| -d   | <backup-datetme>	 | the datetime stamp of the backup to be restored, ignored during backup.              |
-| -h   |			         | print a help prompt describing with simple description on how to use blubee.         |
-| -v   |                     | print version and build information of blubee, must be built to show correct values. |
+| flag | input                 | description                                                                          |
+| ---- | --------------------- | ------------------------------------------------------------------------------------ |
+| -b   | `path/to/backup.json` | path to backup.json as described above.                                              | 
+| -c   | `path/to/config`      | path to custom blubee config as described below.                                     |
+| -n   | `<config-name>`	   | name of a specific backup config from the backup json to restore or backup.          |
+| -d   | `<backup-datetme>`	   | the datetime stamp of the backup to be restored, ignored during backup.              |
+| -h   |			           | print a help prompt describing with simple description on how to use blubee.         |
+| -v   |                       | print version and build information of blubee, must be built to show correct values. |
 
 ### Configuration file
 
