@@ -168,7 +168,7 @@ case "$command" in
         backup "$backup_config_json" "$config_name"
         ;;
     restore)
-        restore "$backup_config_json" "$RESTORE_BACKUP_COPY" "$config_name" "$backup_datetime"
+        restore "$backup_config_json" "$RESTORE_BACKUP_PATH" "$config_name" "$backup_datetime"
         exit $?
         ;;
     dry)
@@ -180,7 +180,7 @@ case "$command" in
                 backup "$backup_config_json" "$config_name" "-x"
                 ;;
             restore)
-                restore "$backup_config_json" "$RESTORE_BACKUP_COPY" "$config_name" "$backup_datetime" "-x"
+                restore "$backup_config_json" "$RESTORE_BACKUP_PATH" "$config_name" "$backup_datetime" "-x"
                 exit $?
                 ;;
             *)

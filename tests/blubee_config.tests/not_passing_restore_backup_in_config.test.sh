@@ -39,10 +39,10 @@ EOM
 )
 echo "$json" > $backup_json
 
-# AND a config with no RESTORE_BACKUP_COPY variable
-config_path="$test_dir/possible_to_pass_backup_copy_path_in_config.config"
-restore_backup_copy_path="$test_dir/possible_to_pass_backup_copy_path_in_config.restore_backup"
-mkdir $restore_backup_copy_path
+# AND a config with no RESTORE_BACKUP_PATH variable
+config_path="$test_dir/possible_to_pass_restore_backup_path_in_config.config"
+restore_backup_path="$test_dir/possible_to_pass_restore_backup_path_in_config.restore_backup"
+mkdir $restore_backup_path
 echo "\
 " > $config_path
 
@@ -68,6 +68,6 @@ echo "$(asserts_to_text "$test_results")"
 # clean up
 rm -r "$root_copy"
 rm "$backup_json"
-[ -e "$restore_backup_copy_path" ] && rm -r $restore_backup_copy_path
+[ -e "$restore_backup_path" ] && rm -r $restore_backup_path
 [ -e "$config_path" ] && rm $config_path
 

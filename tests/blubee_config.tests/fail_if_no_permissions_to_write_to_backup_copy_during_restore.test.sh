@@ -28,13 +28,13 @@ echo "\
 }\
 " > $backup_json
 
-# AND a config with a RESTORE_BACKUP_COPY variable
+# AND a config with a RESTORE_BACKUP_PATH variable
 config_path="$test_dir/fail_if_no_permissions_to_write_to_backup_copy_during_restore.config"
-restore_backup_copy_path="$test_dir/fail_if_no_permissions_to_write_to_backup_copy_during_restore.restore_backup"
-mkdir $restore_backup_copy_path
-chmod -w $restore_backup_copy_path
+restore_backup_path="$test_dir/fail_if_no_permissions_to_write_to_backup_copy_during_restore.restore_backup"
+mkdir $restore_backup_path
+chmod -w $restore_backup_path
 echo "\
-RESTORE_BACKUP_COPY=$restore_backup_copy_path
+RESTORE_BACKUP_PATH=$restore_backup_path
 " > $config_path
 
 # AND the source root contains some content
@@ -66,6 +66,6 @@ echo "$(asserts_to_text "$test_results")"
 rm -r "$destination"
 rm "$test_dir/$backup_json"
 rm -r "$source_root"
-chmod +w "$restore_backup_copy_path"
-rm -r "$restore_backup_copy_path"
+chmod +w "$restore_backup_path"
+rm -r "$restore_backup_path"
 rm "$config_path"

@@ -6,13 +6,13 @@ cd $relative_dir
 . ../test_utils.sh
 
 test_dir="$(pwd)"
-backup_json="possible_to_pass_backup_copy_path_in_config.backup.json"
+backup_json="possible_to_pass_restore_backup_path_in_config.backup.json"
 backup_json_path="$test_dir/$backup_json"
 
 # GIVEN a test backup json
 name="permissions"
-destination="$test_dir/possible_to_pass_backup_copy_path_in_config.copy"
-source_root="$test_dir/possible_to_pass_backup_copy_path_in_config.result"
+destination="$test_dir/possible_to_pass_restore_backup_path_in_config.copy"
+source_root="$test_dir/possible_to_pass_restore_backup_path_in_config.result"
 echo "\
 {
     \"backup_destination\": \"$destination\",
@@ -28,12 +28,12 @@ echo "\
 }\
 " > $backup_json
 
-# AND a config with a RESTORE_BACKUP_COPY variable
-config_path="$test_dir/possible_to_pass_backup_copy_path_in_config.config"
-restore_backup_copy_path="$test_dir/possible_to_pass_backup_copy_path_in_config.restore_backup"
-mkdir $restore_backup_copy_path
+# AND a config with a RESTORE_BACKUP_PATH variable
+config_path="$test_dir/possible_to_pass_restore_backup_path_in_config.config"
+restore_backup_path="$test_dir/possible_to_pass_restore_backup_path_in_config.restore_backup"
+mkdir $restore_backup_path
 echo "\
-RESTORE_BACKUP_COPY=$restore_backup_copy_path
+RESTORE_BACKUP_PATH=$restore_backup_path
 " > $config_path
 
 # AND the source root contains some content
@@ -51,13 +51,13 @@ echo "new file" > "$source_root/dir1/new-file"
 ./blubee -b "$backup_json_path" -c "$config_path" restore
 
 # THEN the restore backup copy directory will have the expected content
-test_results=$(assert_dirs_equal "$restore_backup_copy_path/latest" "$test_dir/possible_to_pass_backup_copy_path_in_config.expected")
+test_results=$(assert_dirs_equal "$restore_backup_path/latest" "$test_dir/possible_to_pass_restore_backup_path_in_config.expected")
 
-echo "possible_to_pass_backup_copy_path_in_config.test.sh\nRESULTS:"
+echo "possible_to_pass_restore_backup_path_in_config.test.sh\nRESULTS:"
 echo "$(asserts_to_text "$test_results")"
 
 rm -r "$destination"
 rm "$test_dir/$backup_json"
 rm -r "$source_root"
-rm -r "$restore_backup_copy_path"
+rm -r "$restore_backup_path"
 rm "$config_path"
