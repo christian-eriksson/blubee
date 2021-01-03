@@ -23,7 +23,7 @@ trim_to_first_right_slash() {
             */)
                 break;;
             *)
-                if [ -z $string ]; then
+                if [ -z "$string" ]; then
                     break
                 fi
                 string=${string%?};;

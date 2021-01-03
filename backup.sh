@@ -4,6 +4,7 @@ script_dir="${0%/*}"
 
 . $script_dir/string_utils.sh
 . $script_dir/file_utils.sh
+. $script_dir/json_utils.sh
 
 while getopts ":s:d:r:xh:u:" option; do
     case "${option}" in
@@ -61,7 +62,9 @@ test_nonexistent_link "$latest_link" "$message" "$host" "$user"
 [ ! -z $user ] && remote_prefix="$user@"
 [ ! -z $host ] && remote_prefix="$remote_prefix$host:"
 
-for source_path in $source_paths; do
+index=0
+source_path="$(dequote_string "$(get_list_item "$source_paths" "$index")")"
+while [ "$source_path" != "null" ]; do
     source_suffix=$(trim_right_slash "$(trim_left_slash "$source_path")")
     backup_path_suffix=$(trim_right_slash "$(trim_to_first_right_slash "$source_suffix")")
     destination=$(trim_right_slash "$backup_path/$backup_path_suffix")
@@ -72,6 +75,9 @@ for source_path in $source_paths; do
         --link-dest "$latest_link/$backup_path_suffix" \
         "$source" \
         "$remote_prefix$destination"
+
+    index=$((index + 1))
+    source_path="$(dequote_string "$(get_list_item "$source_paths" "$index")")"
 done
 
 if [ -z "$dry_run" ]; then

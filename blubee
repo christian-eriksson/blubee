@@ -106,11 +106,8 @@ backup() {
         source_root=$(trim_right_slash "$(dequote_string "$source_root")")
 
         sources_list=$(get_json_element ".paths" "$config")
-        [ -z "sources_list" ] && echo "No source paths for '$config_name'!" && panic
-        sources=$(extract_json_list "$sources_list")
-        [ -z "$sources" ] && echo "No sources in config '$config_name'!" && panic
 
-        $script_dir/backup.sh -r "$source_root" -s "$sources" $destination_user $destination_host -d "$destination_path/$config_name" $additional_options
+        $script_dir/backup.sh -r "$source_root" -s "$sources_list" $destination_user $destination_host -d "$destination_path/$config_name" $additional_options
     done
 }
 

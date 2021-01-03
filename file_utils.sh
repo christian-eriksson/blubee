@@ -22,7 +22,7 @@ create_directory() {
     user="$3"
 
     if [ -z "$host" ]; then
-        mkdir -p $path
+        mkdir -p "$path"
     else
         if [ -z "$user" ]; then
             ssh $host "mkdir -p $path"
