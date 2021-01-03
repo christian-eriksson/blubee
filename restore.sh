@@ -3,6 +3,8 @@
 script_dir="${0%/*}"
 
 . $script_dir/string_utils.sh
+. $script_dir/file_utils.sh
+. $script_dir/json_utils.sh
 
 datetime_of_snapshot="latest"
 
@@ -59,14 +61,28 @@ restore_root=$(trim_right_slash "$restore_root")
 [ ! -z $user ] && remote_prefix="$user@"
 [ ! -z $host ] && remote_prefix="$remote_prefix$host:"
 
-for restore_path in $restore_paths; do
+index=0
+restore_path="$(dequote_string "$(get_list_item "$restore_paths" "$index")")"
+while [ "$restore_path" != "null" ]; do
     source_suffix=$(trim_right_slash "$(trim_left_slash "$restore_path")")
     restore_path_suffix=$(trim_to_first_right_slash "$source_suffix")
 
-    [ ! -z "$backup_copy_path" ] && backup_options="--backup --backup-dir $backup_copy_path/$datetime_of_snapshot/$restore_path_suffix"
+    source_path="$remote_prefix$backup_source_path/$datetime_of_snapshot/$source_suffix"
+    target_dir="$restore_root/$restore_path_suffix"
 
-    rsync -aE --progress --delete $dry_run $backup_options \
-        "$remote_prefix$backup_source_path/$datetime_of_snapshot/$source_suffix" \
-        "$restore_root/$restore_path_suffix"
+    # rsync seems to have a problem with some creating directories with
+    # spaces and unorthodox characters (not sure why), so we help it on
+    # the way.
+    [ -z "$dry_run" ] && create_directory_if_not_exist "$target_dir"
+
+    if [ ! -z "$backup_copy_path" ]; then
+        restore_backup_dir="$backup_copy_path/$datetime_of_snapshot/$restore_path_suffix"
+        rsync -aE --progress --delete $dry_run --backup --backup-dir "$restore_backup_dir" "$source_path" "$target_dir"
+    else
+        rsync -aE --progress --delete $dry_run "$source_path" "$target_dir"
+    fi
+
+    index=$((index + 1))
+    restore_path="$(dequote_string "$(get_list_item "$restore_paths" "$index")")"
 done
 

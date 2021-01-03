@@ -32,6 +32,11 @@ create_directory() {
     fi
 }
 
+create_directory_if_not_exist() {
+    path="$1"
+    [ ! -e "$path" ] && mkdir -p  "$path"
+}
+
 create_link() {
     target="$1"
     link_path="$2"
