@@ -12,7 +12,13 @@ $ git clone https://github.com/christian-eriksson/blubee.git
 
 ## Build
 
-Run `./build.sh <version>` To build `dist/blubee_<version>_all.deb` and `dist/blubee`.
+To build `dist/blubee_<version>_all.deb` and `dist/blubee`, run:
+
+```
+# ./build.sh <version>
+```
+
+this script would also build a tar ball with a configured version of blubee.
 
 ## Install
 
@@ -26,9 +32,11 @@ You are now ready to run `blubee`.
 
 ### Manual install
 
-On a non Debian system, you can install blubee by copying the content of `dist/blubee/etc` and `dist/blubee/usr/local/bin` to your `/etc` and `/usr/local/bin`. The launcher script in `dist/blubee/usr/local/bin` may be placed in some other directory present in your `$PATH` if you wish.
+On a non Debian system, you can install blubee by building blubee and extract the content of the resulting tar ball, `blubee_<version>_all.tar.gz`, to your `/etc` and `/usr/local/bin`. The launcher script in `dist/blubee/usr/local/bin` may be placed in some other directory present in your `$PATH` if you wish.
 
 During restores blubee will save files that has been changed or will be deleted by the backup. Default folder for this backup copy is `/var/local/blubee/backups`, make sure to create this directory and that the user running blubee has write permissions to this directory.
+
+Also install the dependencies listed below.
 
 #### Dependencies
 

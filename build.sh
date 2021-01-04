@@ -1,9 +1,13 @@
 #!/bin/sh
 
+relative_script_dir=${0%/*}
+cd $relative_script_dir
+script_path=$(pwd)
+
 [ -z "$1" ] && echo "provide a version to build" && exit 1
 version="$1"
 
-target_root=dist
+target_root=$script_path/dist
 [ -e $target_root ] && rm -r $target_root
 mkdir $target_root
 
@@ -29,5 +33,11 @@ sed "s/Version: -/Version: $version/" package/control > $distro_dir/control
 
 cp package/conffiles package/postinst package/postrm $distro_dir
 
+chown -R root:root "$bin_dir"
+chown -R root:root "$conf_dir"
+
 dpkg -b $package_root $target_root/blubee_${version}_all.deb
+
+cd $package_root
+tar cvzf $target_root/blubee_${version}_all.tar.gz etc/ usr/
 
