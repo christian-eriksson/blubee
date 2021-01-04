@@ -73,7 +73,7 @@ while [ "$restore_path" != "null" ]; do
     # rsync seems to have a problem with some creating directories with
     # spaces and unorthodox characters (not sure why), so we help it on
     # the way.
-    [ -z "$dry_run" ] && create_directory_if_not_exist "$target_dir"
+    [ -z "$dry_run" ] && create_directory "$target_dir" "$host" "$user"
 
     if [ ! -z "$backup_copy_path" ]; then
         restore_backup_dir="$backup_copy_path/$datetime_of_snapshot/$restore_path_suffix"

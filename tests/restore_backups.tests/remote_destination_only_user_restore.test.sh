@@ -16,6 +16,7 @@ root_copy="$test_dir/test_files_root_remote_destination_restore.copy"
 cp -r $root $root_copy
 
 activate_mock "rsync" "$test_root"
+activate_mock "shh "$test_root"
 
 config_path="$test_dir/../test_config"
 
