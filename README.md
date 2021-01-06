@@ -34,7 +34,7 @@ You are now ready to run `blubee`.
 
 On a non Debian system, you can install blubee by building blubee and extract the content of the resulting tar ball, `blubee_<version>_all.tar.gz`, to your `/etc` and `/usr/local/bin`. The launcher script in `dist/blubee/usr/local/bin` may be placed in some other directory present in your `$PATH` if you wish.
 
-During restores blubee will save files that has been changed or will be deleted by the backup. Default folder for this backup copy is `/var/local/blubee/backups`, make sure to create this directory and that the user running blubee has write permissions to this directory.
+During restores blubee will save files that has been changed or will be deleted by the backup. Default folder for this backup copy is `/var/lib/blubee/backups`, make sure to create this directory and that the user running blubee has write permissions to this directory.
 
 Also install the dependencies listed below.
 
@@ -78,7 +78,7 @@ This would tell blubee that backups are to be stored in `/backup/path`. Under th
 
 The backup configs specify which files to backup. Each config specifies a `root` path that will be prepended to each path in `paths`. This should form absolute paths to the files and/or directories to backup. Preferably the root should be as deep as possible. For example if `/my/path/to/file` and `/my/path/to/another/file` is to be backed up choose `/my/path/to` as the root.
 
-**NOTE**: Careful when creating configs, blubee runs the `rsync` command with the --delete option so overlapping root+path combinations in the configs may result in dataloss. Use at your own risk! To minimize the risk, deleted and changed files are saved to `/var/local/blubee/backups`.
+**NOTE**: Careful when creating configs, blubee runs the `rsync` command with the --delete option so overlapping root+path combinations in the configs may result in dataloss. Use at your own risk! To minimize the risk, deleted and changed files are saved to `/var/lib/blubee/backups`.
 
 #### Object definition
 

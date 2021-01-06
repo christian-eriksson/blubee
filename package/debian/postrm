@@ -1,6 +1,6 @@
 #!/bin/sh
 
-restore_backup_path=/var/local/blubee
+restore_backup_path=/var/lib/blubee
 
 [ -e $restore_backup_path ] && rm -r $restore_backup_path
 

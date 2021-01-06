@@ -1,6 +1,6 @@
 #!/bin/sh
 
-restore_backup_path=/var/local/blubee/backups
+restore_backup_path=/var/lib/blubee/backups
 
 [ ! -e $restore_backup_path ] && mkdir -p $restore_backup_path
 
