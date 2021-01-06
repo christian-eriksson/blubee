@@ -20,6 +20,14 @@ To build `dist/blubee_<version>_all.deb` and `dist/blubee`, run:
 
 this script would also build a tar ball with a configured version of blubee.
 
+## Build dependencies
+
+To run the build script, the following packages are needed:
+
+* `dpkg`
+
+At the moment the build script builds for all supported package managers so you'll need all of them (or modify the build script.
+
 ## Install
 
 Build the package as `<version>` then, on a Debian based system run:
@@ -42,8 +50,8 @@ Also install the dependencies listed below.
 
 Blubee uses the following tools. If you don't have them, you'll need to install them.
 
-* rsync
-* jq
+* `rsync`
+* `jq`
 
 ## Run blubee
 
