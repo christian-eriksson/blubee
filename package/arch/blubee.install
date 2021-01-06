@@ -1,0 +1,16 @@
+post_install() {
+    restore_backup_path=/var/lib/blubee/backups
+
+    [ ! -e $restore_backup_path ] && mkdir -p $restore_backup_path
+
+    exit 0
+}
+
+post_remove() {
+    restore_backup_path=/var/lib/blubee
+
+    [ -e $restore_backup_path ] && rm -r $restore_backup_path
+
+    exit 0
+}
+

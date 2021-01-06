@@ -69,6 +69,40 @@ build_tar() {
     cd $original_dir
 }
 
+build_arch() {
+    root="$1"
+    target="$2"
+    version="$3"
+    conf_files="$4"
+    launcher="$5"
+
+    target_dir="$target/blubee_${version}_all"
+    mkdir $target_dir
+
+    cp $conf_files "$target_dir"
+    cp $launcher "$target_dir"
+
+    set_info_version "$version" "$target_dir"
+
+    files="$conf_files $launcher"
+    sha256sums=""
+    for file in $files; do
+        [ -f "$target_dir/$file" ] || continue
+        sha256sums="${sha256sums} '$(sha256sum "$target_dir/$file" | cut -d' ' -f1)'"
+    done
+    sha256sums="${sha256sums#?}"
+
+    arch_dir="package/arch"
+    sed -e "s/pkgver=-/pkgver=$version/" \
+        -e "s/sha256sums=(-)/sha256sums=($sha256sums)/" \
+        -e "s/source=(-)/source=($files)/" \
+        $arch_dir/PKGBUILD > $target_dir/PKGBUILD
+    sed -i -e "/sha256sums=(/ s/ /\n            /g" \
+        -e "/source=(/ s/ /\n        /g" $target_dir/PKGBUILD
+
+    cp $arch_dir/blubee.install $target_dir
+}
+
 config_files="blubee backup.sh restore.sh json_utils.sh string_utils.sh file_utils.sh blubee.info blubee.conf"
 launch_file="launcher"
 dirs=$(create_file_tree "$package_root" "$build_version" "$config_files" "$launch_file")
@@ -78,4 +112,5 @@ set_info_version "$build_version" "$conf_dir"
 
 build_debian "$package_root" "$target_root" "$build_version"
 build_tar "$package_root" "$target_root" "$build_version"
+build_arch "$package_root" "$target_root" "$build_version" "$config_files" "$launch_file"
 
