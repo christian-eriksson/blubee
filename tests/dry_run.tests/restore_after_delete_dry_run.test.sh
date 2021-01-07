@@ -16,23 +16,25 @@ config_path="$test_dir/../test_config"
 
 # GIVEN a test json
 name="dry_run_restore"
-echo "\
+json=$(cat << EOM
 {
-    \"backup_destination\": \"$backup_dir\",
-    \"backup_configs\": [
+    "backup_destination": "$backup_dir",
+    "backup_configs": [
         {
-            \"name\": \"$name\",
-            \"root\": \"$root_copy\",
-            \"paths\": [
-                \"file1\",
-                \"dir1/file3\",
-                \"dir1/sub_dir\",
-                \"dir2\"
+            "name": "$name",
+            "root": "$root_copy",
+            "paths": [
+                "file1",
+                "dir1/file3",
+                "dir1/sub_dir",
+                "dir2"
             ]
         }
     ]
-}\
-" > $backup_json
+}
+EOM
+)
+echo $json > $backup_json
 
 # AND have taken a backup
 cd ../../

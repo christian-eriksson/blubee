@@ -6,7 +6,7 @@ cd $relative_dir
 . ../test_utils.sh
 
 test_dir="$(pwd)"
-backup_json="multi_backup.backup.json"
+backup_json="$test_dir/multi_backup.backup.json"
 
 config_path="$test_dir/../test_config"
 
@@ -14,37 +14,39 @@ config_path="$test_dir/../test_config"
 name_one="multi-one"
 name_two="multi-two"
 destination="$test_dir/multi_backup.result"
-echo "\
+json=$(cat << EOM
 {
-    \"backup_destination\": \"$destination\",
-    \"backup_configs\": [
+    "backup_destination": "$destination",
+    "backup_configs": [
         {
-            \"name\": \"$name_one\",
-            \"root\": \"$test_dir/test_files_root\",
-            \"paths\": [
-                \"file1\",
-                \"dir1\",
-                \"dir3/sub_dir1\"
+            "name": "$name_one",
+            "root": "$test_dir/test_files_root",
+            "paths": [
+                "file1",
+                "dir1",
+                "dir3/sub_dir1"
             ]
         },
         {
-            \"name\": \"$name_two\",
-            \"root\": \"$test_dir/test_files_root\",
-            \"paths\": [
-                \"file2\",
-                \"dir2\",
-                \"dir3/sub_dir2\"
+            "name": "$name_two",
+            "root": "$test_dir/test_files_root",
+            "paths": [
+                "file2",
+                "dir2",
+                "dir3/sub_dir2"
             ]
         }
     ]
-}\
-" > $backup_json
+}
+EOM
+)
+echo $json > $backup_json
 
 # AND we are in blubee root path
 cd ../..
 
 # WHEN we run blubee
-./blubee -c "$config_path" -b "$test_dir/$backup_json" backup
+./blubee -c "$config_path" -b "$backup_json" backup
 
 test_results=""
 
@@ -71,5 +73,5 @@ echo "$(asserts_to_text "$test_results")"
 
 # clean up
 rm -r "$destination"
-rm "$test_dir/$backup_json"
+rm "$backup_json"
 

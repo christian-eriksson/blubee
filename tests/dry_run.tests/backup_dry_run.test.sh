@@ -6,7 +6,7 @@ cd $relative_dir
 . ../test_utils.sh
 
 test_dir="$(pwd)"
-backup_json="backup_dry_run.backup.json"
+backup_json="$test_dir/backup_dry_run.backup.json"
 backup_dir="$test_dir/backup_dry_run.result"
 root="$test_dir/test_files_root"
 root_copy="$test_dir/test_files_root_backup_dry_run.copy"
@@ -16,27 +16,29 @@ config_path="$test_dir/../test_config"
 
 # GIVEN a test json
 name="dry_run"
-echo "\
+json=$(cat << EOM
 {
-    \"backup_destination\": \"$backup_dir\",
-    \"backup_configs\": [
+    "backup_destination": "$backup_dir",
+    "backup_configs": [
         {
-            \"name\": \"$name\",
-            \"root\": \"$root_copy\",
-            \"paths\": [
-                \"file1\",
-                \"dir1/file3\",
-                \"dir1/sub_dir\",
-                \"dir2\"
+            "name": "$name",
+            "root": "$root_copy",
+            "paths": [
+                "file1",
+                "dir1/file3",
+                "dir1/sub_dir",
+                "dir2"
             ]
         }
     ]
-}\
-" > $backup_json
+}
+EOM
+)
+echo $json > $backup_json
 
 # WHEN we run a dry run with blubee
 cd ../..
-./blubee -c "$config_path" -b "$test_dir/$backup_json" dry backup
+./blubee -c "$config_path" -b "$backup_json" dry backup
 
 # THEN blubee ran without crashing
 test_results="$?"
@@ -53,5 +55,5 @@ echo "$(asserts_to_text "$test_results")"
 # clean up
 [ -e "$backup_dir" ] && rm -r "$backup_dir"
 rm -r "$root_copy"
-rm "$test_dir/$backup_json"
+rm "$backup_json"
 

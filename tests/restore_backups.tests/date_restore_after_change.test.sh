@@ -8,7 +8,7 @@ cd $relative_dir
 . ../test_utils.sh
 
 test_dir="$(pwd)"
-backup_json="restore_after_change.backup.json"
+backup_json="$test_dir/restore_after_change.backup.json"
 backup_dir="$test_dir/restore_after_change.result"
 root="$test_dir/test_files_root"
 root_copy="$test_dir/date_restore_after_change_root"
@@ -50,7 +50,7 @@ echo "new file" > "$root_copy/dir1/sub_dir/new-dir/a_new_file"
 rm "$root_copy/dir2/file4"
 
 # AND we have taken a backup
-./blubee -c "$config_path" -b "$test_dir/$backup_json" backup
+./blubee -c "$config_path" -b "$backup_json" backup
 
 # AND we note the date of the first backup
 first_backup_datetime=$(get_a_backup_datetime "$backup_dir/$name")
@@ -66,10 +66,10 @@ for file in $files; do
 done
 
 # AND we take another backup
-./blubee -c "$config_path" -b "$test_dir/$backup_json" backup
+./blubee -c "$config_path" -b "$backup_json" backup
 
 # WHEN we restore the backup
-./blubee -b "$test_dir/$backup_json" -c "$config_path" -d "$first_backup_datetime" restore
+./blubee -b "$backup_json" -c "$config_path" -d "$first_backup_datetime" restore
 
 # THEN blubee runs without error
 test_results="$?"
@@ -82,5 +82,5 @@ echo "$(asserts_to_text "$test_results")"
 
 # clean up
 rm -r "$backup_dir"
-rm "$test_dir/$backup_json"
+rm "$backup_json"
 rm -r $root_copy
