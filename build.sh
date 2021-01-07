@@ -63,7 +63,6 @@ build_tar() {
     version="$3"
 
     original_dir="$(pwd)"
-
     cd $root
     tar cvzf $target/blubee_${version}_all.tar.gz etc/ usr/
     cd $original_dir
@@ -76,7 +75,8 @@ build_arch() {
     conf_files="$4"
     launcher="$5"
 
-    target_dir="$target/blubee_${version}_all"
+    target_name="blubee_${version}_all_aur"
+    target_dir="$target/$target_name"
     mkdir $target_dir
 
     cp $conf_files "$target_dir"
@@ -101,6 +101,11 @@ build_arch() {
         -e "/source=(/ s/ /\n        /g" $target_dir/PKGBUILD
 
     cp $arch_dir/blubee.install $target_dir
+
+    original_dir="$(pwd)"
+    cd $target
+    tar cvzf $target/$target_name.tar.gz $target_name
+    cd $original_dir
 }
 
 config_files="blubee backup.sh restore.sh json_utils.sh string_utils.sh file_utils.sh blubee.info blubee.conf"

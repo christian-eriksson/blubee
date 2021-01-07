@@ -12,15 +12,15 @@ $ git clone https://github.com/christian-eriksson/blubee.git
 
 ## Build
 
-To build `dist/blubee_<version>_all.deb` and `dist/blubee`, run:
+To build blubee, run:
 
 ```
 # ./build.sh <version>
 ```
 
-this script would also build a tar ball with a configured version of blubee.
+this script builds packages for Debian and Arch as well as a tar ball with a configured version of blubee. The build result can be found in `dist/`.
 
-## Build dependencies
+### Build dependencies
 
 To run the build script, the following packages are needed:
 
