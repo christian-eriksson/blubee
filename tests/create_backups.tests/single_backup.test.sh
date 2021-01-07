@@ -52,7 +52,7 @@ test_results="$test_results $(assert_is_link "$result_dir/latest")"
 
 # and the latest backup has the expected content
 has_same_content=$(assert_dirs_equal "$result_dir/latest" "$test_dir/single_backup.expected")
-test_results="$test_results $has_same_content" 
+test_results="$test_results $has_same_content"
 
 echo "single_backup.test.sh\nRESULTS:"
 echo "$(asserts_to_text "$test_results")"

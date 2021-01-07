@@ -56,7 +56,7 @@ cd ../..
 rm -r $source_root
 
 # WHEN we restore the backup
-./blubee -b "$backup_json" -c "$config_path" -n "$name_two" restore 
+./blubee -b "$backup_json" -c "$config_path" -n "$name_two" restore
 
 # THEN the restored source directory has the expected files, content and structure
 test_results=$(assert_dirs_equal "$source_root" "$test_dir/specific_restore_after_delete.expected")

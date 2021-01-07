@@ -77,7 +77,7 @@ test_results="$test_results $(assert_non_empty_string "$found_later_removed")"
 found_new_file=$(echo "$output" | grep -e "dir2/sub_dir/new-file" -e "sub_dir/new-dir/a_new_file")
 test_results="$test_results $(assert_empty_string "$found_new_file")"
 
-# AND the backup directory is not restored 
+# AND the backup directory is not restored
 test_results="$test_results $(assert_no_path "$root_copy")"
 
 # AND the first backup is untouched
