@@ -1,0 +1,15 @@
+#!/bin/sh
+relative_dir="${0%/*}"
+session_data_path="$relative_dir/session"
+
+[ ! -e "$session_data_path" ] && mkdir -p "$session_data_path"
+
+# returns a date time stamp of format +%Y%m%d_%H%M%S, each call will 
+# give a new time one hour into the future from the previous call
+initial_hour=10
+call_count=$(ls -1q "$session_data_path/call"* 2> /dev/null | wc -l)
+hour=$((initial_hour + call_count))
+touch "$relative_dir/session/call-$hour" 2> /dev/null
+date="20201120_${hour}0000"
+echo "$date"
+

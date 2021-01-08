@@ -3,7 +3,13 @@
 activate_mock() {
     binary_to_mock="$1"
     test_root="$2"
-    PATH=$test_root/mocks/$binary_to_mock:$PATH
+    PATH="$test_root/mocks/$binary_to_mock:$PATH"
+}
+
+reset_mock_data() {
+    binary_to_mock="$1"
+    test_root="$2"
+    rm -r "$test_root/mocks/$binary_to_mock/session" 2> /dev/null
 }
 
 activate_blubee_mock() {
