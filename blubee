@@ -78,6 +78,7 @@ backup() {
     backup_name="$2"
     additional_options="$3"
     backup_configs=$(get_json_element '.backup_configs' "$backup_json")
+    backup_version="$(date '+%Y%m%d_%H%M%S')"
 
     destination_path=$(get_json_element ".backup_destination" "$backup_json")
     [ -z "$destination_path" ] && echo "No backup destination path in 'backup.json'!" && panic
@@ -108,7 +109,7 @@ backup() {
 
         sources_list=$(get_json_element ".paths" "$config")
 
-        $script_dir/backup.sh -r "$source_root" -s "$sources_list" $destination_user $destination_host -d "$destination_path/$config_name" $additional_options
+        $script_dir/backup.sh -r "$source_root" -s "$sources_list" $destination_user $destination_host -d "$destination_path/$config_name" -v "$backup_version" $additional_options
     done
 }
 

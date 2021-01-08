@@ -6,7 +6,9 @@ script_dir="${0%/*}"
 . $script_dir/file_utils.sh
 . $script_dir/json_utils.sh
 
-while getopts ":s:d:r:xh:u:" option; do
+backup_version="$(date '+%Y%m%d_%H%M%S')"
+
+while getopts ":s:d:r:xh:u:v:" option; do
     case "${option}" in
         d)
             destination_root=${OPTARG};;
@@ -20,6 +22,8 @@ while getopts ":s:d:r:xh:u:" option; do
             user=${OPTARG};;
         h)
             host=${OPTARG};;
+        v)
+            backup_version=${OPTARG};;
         :)
             echo "Missing argument for option $OPTARG"
             exit 1;;
@@ -51,9 +55,7 @@ fi
 source_root=$(trim_right_slash $source_root)
 destination_root=$(trim_right_slash $destination_root)
 
-datetime="$(date '+%Y%m%d_%H%M%S')"
-
-backup_path="$destination_root/$datetime"
+backup_path="$destination_root/$backup_version"
 latest_link="$destination_root/latest"
 
 message="First backup! Link to latest previous backup does not exist, it will be created."

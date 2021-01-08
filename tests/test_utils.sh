@@ -141,3 +141,10 @@ assert_equal_files() {
     echo "$?"
 }
 
+assert_equal_strings() {
+    string_one="$1"
+    string_two="$2"
+    [ "$string_one" = "$string_two" ]
+    echo "$?"
+}
+
