@@ -63,8 +63,6 @@ restore_root=$(trim_right_slash "$restore_root")
 [ ! -z $user ] && remote_prefix="$user@"
 [ ! -z $host ] && remote_prefix="$remote_prefix$host:"
 
-[ ! -z $port ] && rsync_port="--rsh='ssh -p$port'"
-
 index=0
 restore_path="$(dequote_string "$(get_list_item "$restore_paths" "$index")")"
 while [ "$restore_path" != "null" ]; do
@@ -81,9 +79,17 @@ while [ "$restore_path" != "null" ]; do
 
     if [ ! -z "$backup_copy_path" ]; then
         restore_backup_dir="$backup_copy_path/$datetime_of_snapshot/$restore_path_suffix"
-        rsync -aE --progress $rsync_port --delete $dry_run --backup --backup-dir "$restore_backup_dir" "$source_path" "$target_dir"
+        if [ -z "$port" ]; then
+            rsync -aE --progress --delete $dry_run --backup --backup-dir "$restore_backup_dir" "$source_path" "$target_dir"
+        else
+            rsync -aE --progress --rsh="ssh -p $port" --delete $dry_run --backup --backup-dir "$restore_backup_dir" "$source_path" "$target_dir"
+        fi
     else
-        rsync -aE --progress $rsync_port --delete $dry_run "$source_path" "$target_dir"
+        if [ -z "$port" ]; then
+            rsync -aE --progress --delete $dry_run "$source_path" "$target_dir"
+        else
+            rsync -aE --progress --rsh="ssh -p $port" --delete $dry_run "$source_path" "$target_dir"
+        fi
     fi
 
     index=$((index + 1))

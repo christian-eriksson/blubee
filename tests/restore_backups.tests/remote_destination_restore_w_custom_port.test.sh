@@ -62,7 +62,7 @@ remote_calls=$(echo "$output" | grep -e "ssh.*-p$port.*$user@$host.*mkdir " | wc
 test_results="$test_results $(assert_greater_than $remote_calls 0)"
 
 # THEN blubee sets custom port to the rsync command
-remote_calls=$(echo "$output" | grep -e "--rsh='ssh -p$port'" | wc -l)
+remote_calls=$(echo "$output" | grep -e "--rsh=ssh -p $port" | wc -l)
 test_results="$test_results $(assert_equal_numbers $remote_calls 4)"
 
 echo "remote_destination_restore.test.sh\nRESULTS:"

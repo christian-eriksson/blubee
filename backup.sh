@@ -66,8 +66,6 @@ test_nonexistent_link "$latest_link" "$message" "$host" "$user" "$port"
 [ ! -z $user ] && remote_prefix="$user@"
 [ ! -z $host ] && remote_prefix="$remote_prefix$host:"
 
-[ ! -z $port ] && rsync_port="--rsh='ssh -p$port'"
-
 index=0
 source_path="$(dequote_string "$(get_list_item "$source_paths" "$index")")"
 while [ "$source_path" != "null" ]; do
@@ -77,10 +75,17 @@ while [ "$source_path" != "null" ]; do
     [ -z "$dry_run" ] && create_directory "$destination" "$host" "$user" "$port"
     source="$source_root/$source_suffix"
 
-    rsync -aE --progress --delete $dry_run $rsync_port \
-        --link-dest "$latest_link/$backup_path_suffix" \
-        "$source" \
-        "$remote_prefix$destination"
+    if [ -z "$port" ]; then
+        rsync -aE --progress --delete $dry_run \
+            --link-dest "$latest_link/$backup_path_suffix" \
+            "$source" \
+            "$remote_prefix$destination"
+    else
+        rsync -aE --progress --delete $dry_run --rsh="ssh -p $port" \
+            --link-dest "$latest_link/$backup_path_suffix" \
+            "$source" \
+            "$remote_prefix$destination"
+    fi
 
     index=$((index + 1))
     source_path="$(dequote_string "$(get_list_item "$source_paths" "$index")")"
