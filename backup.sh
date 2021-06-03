@@ -8,7 +8,7 @@ script_dir="${0%/*}"
 
 backup_version="$(date '+%Y%m%d_%H%M%S')"
 
-while getopts ":s:d:r:xh:u:v:" option; do
+while getopts ":s:d:r:xh:u:v:p:" option; do
     case "${option}" in
         d)
             destination_root=${OPTARG};;
@@ -22,6 +22,8 @@ while getopts ":s:d:r:xh:u:v:" option; do
             user=${OPTARG};;
         h)
             host=${OPTARG};;
+        p)
+            port=${OPTARG};;
         v)
             backup_version=${OPTARG};;
         :)
@@ -59,10 +61,12 @@ backup_path="$destination_root/$backup_version"
 latest_link="$destination_root/latest"
 
 message="First backup! Link to latest previous backup does not exist, it will be created."
-test_nonexistent_link "$latest_link" "$message" "$host" "$user"
+test_nonexistent_link "$latest_link" "$message" "$host" "$user" "$port"
 
 [ ! -z $user ] && remote_prefix="$user@"
 [ ! -z $host ] && remote_prefix="$remote_prefix$host:"
+
+[ ! -z $port ] && rsync_port="--rsh='ssh -p$port'"
 
 index=0
 source_path="$(dequote_string "$(get_list_item "$source_paths" "$index")")"
@@ -70,10 +74,10 @@ while [ "$source_path" != "null" ]; do
     source_suffix=$(trim_right_slash "$(trim_left_slash "$source_path")")
     backup_path_suffix=$(trim_right_slash "$(trim_to_first_right_slash "$source_suffix")")
     destination=$(trim_right_slash "$backup_path/$backup_path_suffix")
-    [ -z "$dry_run" ] && create_directory "$destination" "$host" "$user"
+    [ -z "$dry_run" ] && create_directory "$destination" "$host" "$user" "$port"
     source="$source_root/$source_suffix"
 
-    rsync -aE --progress --delete $dry_run \
+    rsync -aE --progress --delete $dry_run $rsync_port \
         --link-dest "$latest_link/$backup_path_suffix" \
         "$source" \
         "$remote_prefix$destination"
@@ -83,7 +87,7 @@ while [ "$source_path" != "null" ]; do
 done
 
 if [ -z "$dry_run" ]; then
-    remove_path "$latest_link" "$host" "$user"
-    create_link "$backup_path" "$latest_link" "$host" "$user"
+    remove_path "$latest_link" "$host" "$user" "$port"
+    create_link "$backup_path" "$latest_link" "$host" "$user" "$port"
 fi
 

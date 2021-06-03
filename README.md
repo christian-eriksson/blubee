@@ -24,7 +24,7 @@ this script builds packages for Debian and Arch as well as a tar ball with a con
 
 To run the build script, the following packages are needed:
 
-* `dpkg`
+- `dpkg`
 
 At the moment the build script builds for all supported package managers so you'll need all of them (or modify the build script.
 
@@ -50,8 +50,8 @@ Also install the dependencies listed below.
 
 Blubee uses the following tools. If you don't have them, you'll need to install them.
 
-* `rsync`
-* `jq`
+- `rsync`
+- `jq`
 
 ## Run blubee
 
@@ -67,18 +67,14 @@ For defining a backup job, blubee expects a `backup.json` this file is passed to
 
 ```json
 {
-    "backup_destination": "/backup/path",
-    "backup_configs": [
-        {
-            "name": "my-backup",
-            "root": "/backup/root",
-            "paths": [
-                "some/directory/path",
-                "some/file.txt",
-                "another/path"
-            ]
-        }
-    ]
+  "backup_destination": "/backup/path",
+  "backup_configs": [
+    {
+      "name": "my-backup",
+      "root": "/backup/root",
+      "paths": ["some/directory/path", "some/file.txt", "another/path"]
+    }
+  ]
 }
 ```
 
@@ -98,6 +94,7 @@ The `backup.json` consists of an object with the properties in the following tab
 | `backup_configs`     | `backup_config[]` | list of backup config objects                                         |
 | `destination_host`   | `string`          | address (eg. IP or domain name) to host with the `backup_destination` |
 | `destination_user`   | `string`          | user on `destination_host` which will create the backup               |
+| `destination_port`   | `string`          | port to use for ssh on `destination_host`                             |
 
 If destination host and, optionally, user is present in the `backup.json` blubee will connect to the destination host to create the backup. It is recommended to make sure that the machine running blubee can login automatically (as the provided user) on the destination host. Otherwise you'd have to type the password for each backup config in the `backup,json` as well as any filesystem accesses blubee does.
 
@@ -223,4 +220,3 @@ Possible variables for the config are:
 | Variable              | Description                                                                     |
 | --------------------- | ------------------------------------------------------------------------------- |
 | `RESTORE_BACKUP_PATH` | Path where blubee stores files that were changed or deleted during last restore |
-

@@ -8,7 +8,7 @@ script_dir="${0%/*}"
 
 datetime_of_snapshot="latest"
 
-while getopts ":r:p:d:s:b:xu:h:" option; do
+while getopts ":r:p:d:s:b:xu:h:P:" option; do
     case "${option}" in
         r)
             restore_root=${OPTARG};;
@@ -26,6 +26,8 @@ while getopts ":r:p:d:s:b:xu:h:" option; do
             user=${OPTARG};;
         h)
             host=${OPTARG};;
+        P)
+            port=${OPTARG};;
         :)
             echo "Missing argument for option '$OPTARG'"
             exit 1
@@ -61,6 +63,8 @@ restore_root=$(trim_right_slash "$restore_root")
 [ ! -z $user ] && remote_prefix="$user@"
 [ ! -z $host ] && remote_prefix="$remote_prefix$host:"
 
+[ ! -z $port ] && rsync_port="--rsh='ssh -p$port'"
+
 index=0
 restore_path="$(dequote_string "$(get_list_item "$restore_paths" "$index")")"
 while [ "$restore_path" != "null" ]; do
@@ -73,13 +77,13 @@ while [ "$restore_path" != "null" ]; do
     # rsync seems to have a problem with some creating directories with
     # spaces and unorthodox characters (not sure why), so we help it on
     # the way.
-    [ -z "$dry_run" ] && create_directory "$target_dir" "$host" "$user"
+    [ -z "$dry_run" ] && create_directory "$target_dir" "$host" "$user" "$port"
 
     if [ ! -z "$backup_copy_path" ]; then
         restore_backup_dir="$backup_copy_path/$datetime_of_snapshot/$restore_path_suffix"
-        rsync -aE --progress --delete $dry_run --backup --backup-dir "$restore_backup_dir" "$source_path" "$target_dir"
+        rsync -aE --progress $rsync_port --delete $dry_run --backup --backup-dir "$restore_backup_dir" "$source_path" "$target_dir"
     else
-        rsync -aE --progress --delete $dry_run "$source_path" "$target_dir"
+        rsync -aE --progress $rsync_port --delete $dry_run "$source_path" "$target_dir"
     fi
 
     index=$((index + 1))

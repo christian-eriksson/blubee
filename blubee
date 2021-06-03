@@ -89,6 +89,8 @@ backup() {
     destination_host=$(dequote_string "$(get_json_element ".destination_host" "$backup_json")")
     [ ! -z "$destination_user" ] && [ -z $destination_host ] && echo "A destination host must be present in the 'backup.json' if a user is present!" && panic
     [ ! -z "$destination_host" ] && destination_host="-h $destination_host"
+    destination_port=$(dequote_string "$(get_json_element ".destination_port" "$backup_json")")
+    [ ! -z "$destination_port" ] && destination_port="-p $destination_port"
 
     configs_count=$(list_length "$backup_configs")
     config_index=0
@@ -109,7 +111,7 @@ backup() {
 
         sources_list=$(get_json_element ".paths" "$config")
 
-        $script_dir/backup.sh -r "$source_root" -s "$sources_list" $destination_user $destination_host -d "$destination_path/$config_name" -v "$backup_version" $additional_options
+        $script_dir/backup.sh -r "$source_root" -s "$sources_list" $destination_user $destination_host $destination_port -d "$destination_path/$config_name" -v "$backup_version" $additional_options
     done
 }
 
@@ -129,6 +131,8 @@ restore() {
     destination_host=$(dequote_string "$(get_json_element ".destination_host" "$backup_json")")
     [ ! -z "$destination_user" ] && [ -z $destination_host ] && echo "A destination host must be present in the 'backup.json' if a user is present!" && panic
     [ ! -z "$destination_host" ] && destination_host="-h $destination_host"
+    destination_port=$(dequote_string "$(get_json_element ".destination_port" "$backup_json")")
+    [ ! -z "$destination_port" ] && destination_port="-P $destination_port"
 
     backup_configs=$(get_json_element '.backup_configs' "$backup_json")
     configs_count=$(list_length "$backup_configs")
@@ -151,7 +155,7 @@ restore() {
         sources_list=$(get_json_element ".paths" "$config")
 
         $script_dir/restore.sh -r "$restore_path" -s "$backups_path/$config_name" -p "$sources_list" \
-            $destination_user $destination_host \
+            $destination_user $destination_host $destination_port \
             $restore_datetime $restore_backup_copy $additional_options
         exit_code=$?
         [ "$exit_code" -ne "0" ] && exit $exit_code
