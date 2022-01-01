@@ -1,4 +1,4 @@
 #!/bin/sh
 
-echo "MOCK!! rsync $@\n"
+echo -e "MOCK!! rsync $@\n"
 

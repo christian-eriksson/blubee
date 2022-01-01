@@ -1,4 +1,4 @@
 #!/bin/sh
 
-echo "MOCK!! ssh ${@}\n"
+echo -e "MOCK!! ssh ${@}\n"
 

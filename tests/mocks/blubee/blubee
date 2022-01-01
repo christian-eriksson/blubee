@@ -1,4 +1,4 @@
 #!/bin/sh
 
-echo "MOCK!! blubee $@\n"
+echo -e "MOCK!! blubee $@\n"
 
