@@ -61,7 +61,7 @@ echo "OUTPUT: $output"
 test_results="$exit_code"
 
 # AND blubee prepends the remote user and host to the backup destination
-remote_calls=$(echo "$output" | grep -e "rsync.*$user@$host:$backup_dir/$name/[0-9]\{8\}_[0-9]\{6\}" | wc -l)
+remote_calls=$(echo "$output" | grep -e "rsync.*--protect-args.*$user@$host:$backup_dir/$name/[0-9]\{8\}_[0-9]\{6\}" | wc -l)
 test_results="$test_results $(assert_equal_numbers $remote_calls 8)"
 
 # AND blubee has created the expected folders for backup on the remote

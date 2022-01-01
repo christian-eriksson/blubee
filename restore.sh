@@ -80,15 +80,15 @@ while [ "$restore_path" != "null" ]; do
     if [ ! -z "$backup_copy_path" ]; then
         restore_backup_dir="$backup_copy_path/$datetime_of_snapshot/$restore_path_suffix"
         if [ -z "$port" ]; then
-            rsync -aE --progress --delete $dry_run --backup --backup-dir "$restore_backup_dir" "$source_path" "$target_dir"
+            rsync -aE --protect-args --progress --delete $dry_run --backup --backup-dir "$restore_backup_dir" "$source_path" "$target_dir"
         else
-            rsync -aE --progress --rsh="ssh -p $port" --delete $dry_run --backup --backup-dir "$restore_backup_dir" "$source_path" "$target_dir"
+            rsync -aE --protect-args --progress --rsh="ssh -p $port" --delete $dry_run --backup --backup-dir "$restore_backup_dir" "$source_path" "$target_dir"
         fi
     else
         if [ -z "$port" ]; then
-            rsync -aE --progress --delete $dry_run "$source_path" "$target_dir"
+            rsync -aE --protect-args --progress --delete $dry_run "$source_path" "$target_dir"
         else
-            rsync -aE --progress --rsh="ssh -p $port" --delete $dry_run "$source_path" "$target_dir"
+            rsync -aE --protect-args --progress --rsh="ssh -p $port" --delete $dry_run "$source_path" "$target_dir"
         fi
     fi
 

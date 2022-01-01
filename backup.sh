@@ -76,12 +76,12 @@ while [ "$source_path" != "null" ]; do
     source="$source_root/$source_suffix"
 
     if [ -z "$port" ]; then
-        rsync -aE --progress --delete $dry_run \
+        rsync -aE --protect-args --progress --delete $dry_run \
             --link-dest "$latest_link/$backup_path_suffix" \
             "$source" \
             "$remote_prefix$destination"
     else
-        rsync -aE --progress --delete $dry_run --rsh="ssh -p $port" \
+        rsync -aE --protect-args --progress --delete $dry_run --rsh="ssh -p $port" \
             --link-dest "$latest_link/$backup_path_suffix" \
             "$source" \
             "$remote_prefix$destination"
