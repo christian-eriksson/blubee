@@ -55,31 +55,31 @@ exit_code="$?"
 test_results="$exit_code"
 
 # AND blubee creates a directory for each parent directory in the paths on the remote machine
-remote_calls=$(echo "$output" | grep -e "ssh.*$user@$host.*mkdir.*$backup_dir/$name/[0-9]\{8\}_[0-9]\{6\}$" | wc -l)
+remote_calls=$(echo "$output" | grep -e "ssh.*$user@$host.*mkdir.*\"$backup_dir/$name/[0-9]\{8\}_[0-9]\{6\}\"$" | wc -l)
 test_results="$test_results $(assert_equal_numbers $remote_calls 2)"
 
-remote_calls=$(echo "$output" | grep -e "ssh.*$user@$host.*mkdir.*$backup_dir/$name/[0-9]\{8\}_[0-9]\{6\}/dir1$" | wc -l)
+remote_calls=$(echo "$output" | grep -e "ssh.*$user@$host.*mkdir.*\"$backup_dir/$name/[0-9]\{8\}_[0-9]\{6\}/dir1\"$" | wc -l)
 test_results="$test_results $(assert_equal_numbers $remote_calls 2)"
 
 # AND blubee does not create a directory for the top files/directories in the paths on the remote machine
-remote_calls=$(echo "$output" | grep -e "ssh.*$user@$host.*mkdir.*$backup_dir/$name/[0-9]\{8\}_[0-9]\{6\}/file1" | wc -l)
+remote_calls=$(echo "$output" | grep -e "ssh.*$user@$host.*mkdir.*\"$backup_dir/$name/[0-9]\{8\}_[0-9]\{6\}/file1\"" | wc -l)
 test_results="$test_results $(assert_equal_numbers $remote_calls 0)"
 
-remote_calls=$(echo "$output" | grep -e "ssh.*$user@$host.*mkdir.*$backup_dir/$name/[0-9]\{8\}_[0-9]\{6\}/dir1/file3" | wc -l)
+remote_calls=$(echo "$output" | grep -e "ssh.*$user@$host.*mkdir.*\"$backup_dir/$name/[0-9]\{8\}_[0-9]\{6\}/dir1/file3\"" | wc -l)
 test_results="$test_results $(assert_equal_numbers $remote_calls 0)"
 
-remote_calls=$(echo "$output" | grep -e "ssh.*$user@$host.*mkdir.*$backup_dir/$name/[0-9]\{8\}_[0-9]\{6\}/dir1/sub_dir" | wc -l)
+remote_calls=$(echo "$output" | grep -e "ssh.*$user@$host.*mkdir.*\"$backup_dir/$name/[0-9]\{8\}_[0-9]\{6\}/dir1/sub_dir\"" | wc -l)
 test_results="$test_results $(assert_equal_numbers $remote_calls 0)"
 
-remote_calls=$(echo "$output" | grep -e "ssh.*$user@$host.*mkdir.*$backup_dir/$name/[0-9]\{8\}_[0-9]\{6\}/dir2" | wc -l)
+remote_calls=$(echo "$output" | grep -e "ssh.*$user@$host.*mkdir.*\"$backup_dir/$name/[0-9]\{8\}_[0-9]\{6\}/dir2\"" | wc -l)
 test_results="$test_results $(assert_equal_numbers $remote_calls 0)"
 
 # AND blubee removes the latest link on the remote machine
-remote_calls=$(echo "$output" | grep -e "ssh.*$user@$host.*rm.*$backup_dir/$name/latest" | wc -l)
+remote_calls=$(echo "$output" | grep -e "ssh.*$user@$host.*rm.*\"$backup_dir/$name/latest\"" | wc -l)
 test_results="$test_results $(assert_equal_numbers $remote_calls 1)"
 
 # AND blubee recreates the latest link on the remote machine
-remote_calls=$(echo "$output" | grep -e "ssh.*$user@$host.*ln -s.*$backup_dir/$name/[0-9]\{8\}_[0-9]\{6\}.*$backup_dir/$name/latest" | wc -l)
+remote_calls=$(echo "$output" | grep -e "ssh.*$user@$host.*ln -s.*\"$backup_dir/$name/[0-9]\{8\}_[0-9]\{6\}.*$backup_dir/$name/latest\"" | wc -l)
 test_results="$test_results $(assert_equal_numbers $remote_calls 1)"
 
 echo "remote_destination_single_backup.test.sh\nRESULTS:"

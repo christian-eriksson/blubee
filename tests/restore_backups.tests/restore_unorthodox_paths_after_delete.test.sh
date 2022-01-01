@@ -50,7 +50,6 @@ cd ../..
 rm -r "$root_copy"
 
 # WHEN we restore the backup
-echo "RESTORE!!!!!"
 ./blubee -b "$backup_json" -c "$config_path" restore
 
 # THEN blubee ran without crashing

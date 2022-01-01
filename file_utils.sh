@@ -9,12 +9,12 @@ remove_path() {
     [ -n "$port" ] && port_flag="-p$port"
 
     if [ -z "$host" ]; then
-        rm -rf $path
+        rm -rf "$path"
     else
         if [ -z "$user" ]; then
-            ssh $port_flag $host "rm -rf $path"
+            ssh $port_flag $host "rm -rf \"$path\""
         else
-            ssh $port_flag $user@$host "rm -rf $path"
+            ssh $port_flag $user@$host "rm -rf \"$path\""
         fi
     fi
 }
@@ -31,9 +31,9 @@ create_directory() {
         mkdir -p "$path"
     else
         if [ -z "$user" ]; then
-            ssh $port_flag $host "mkdir -p $path"
+            ssh $port_flag $host "mkdir -p \"$path\""
         else
-            ssh $port_flag $user@$host "mkdir -p $path"
+            ssh $port_flag $user@$host "mkdir -p \"$path\""
         fi
     fi
 }
@@ -48,12 +48,12 @@ create_link() {
     [ -n "$port" ] && port_flag="-p$port"
 
     if [ -z "$host" ]; then
-        ln -s $target $link_path
+        ln -s "$target" "$link_path"
     else
         if [ -z "$user" ]; then
-            ssh $port_flag $host "ln -s $target $link_path"
+            ssh $port_flag $host "ln -s \"$target\" \"$link_path\""
         else
-            ssh $port_flag $user@$host "ln -s $target $link_path"
+            ssh $port_flag $user@$host "ln -s \"$target\" \"$link_path\""
         fi
     fi
 }
@@ -71,9 +71,9 @@ test_nonexistent_link() {
         [ ! -L $link_path ] && echo "$message"
     else
         if [ -z "$user" ]; then
-            ssh $port_flag $host "[ ! -L $link_path ] && echo \"$message\""
+            ssh $port_flag $host "[ ! -L \"$link_path\" ] && echo \"$message\""
         else
-            ssh $port_flag $user@$host "[ ! -L $link_path ] && echo \"$message\""
+            ssh $port_flag $user@$host "[ ! -L \"$link_path\" ] && echo \"$message\""
         fi
     fi
 }

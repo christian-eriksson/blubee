@@ -55,8 +55,6 @@ cd ../..
 output=$(./blubee -c "$config_path" -b "$backup_json" backup)
 exit_code="$?"
 
-echo "OUTPUT: $output"
-
 # THEN blubee ran without chrashing
 test_results="$exit_code"
 
@@ -65,17 +63,17 @@ remote_calls=$(echo "$output" | grep -e "rsync.*--protect-args.*$user@$host:$bac
 test_results="$test_results $(assert_equal_numbers $remote_calls 8)"
 
 # AND blubee has created the expected folders for backup on the remote
-remote_calls=$(echo "$output" | grep -e "ssh.*$user@$host.*mkdir.*$backup_dir/$name/[0-9]\{8\}_[0-9]\{6\}/dir with spaces" | wc -l)
+remote_calls=$(echo "$output" | grep -e "ssh.*$user@$host.*mkdir.*\"$backup_dir/$name/[0-9]\{8\}_[0-9]\{6\}/dir with spaces\"" | wc -l)
 test_results="$test_results $(assert_greater_than $remote_calls 0)"
 
-remote_calls=$(echo "$output" | grep -e "ssh.*$user@$host.*mkdir.*$backup_dir/$name/[0-9]\{8\}_[0-9]\{6\}/åäöÅÄÖ!\$£@øæØÆ{\[()]}+" | wc -l)
+remote_calls=$(echo "$output" | grep -e "ssh.*$user@$host.*mkdir.*\"$backup_dir/$name/[0-9]\{8\}_[0-9]\{6\}/åäöÅÄÖ!\$£@øæØÆ{\[()]}+\"" | wc -l)
 test_results="$test_results $(assert_greater_than $remote_calls 0)"
 
-remote_calls=$(echo "$output" | grep -e "ssh.*$user@$host.*mkdir.*$backup_dir/$name/[0-9]\{8\}_[0-9]\{6\}/no_spaces" | wc -l)
+remote_calls=$(echo "$output" | grep -e "ssh.*$user@$host.*mkdir.*\"$backup_dir/$name/[0-9]\{8\}_[0-9]\{6\}/no_spaces\"" | wc -l)
 test_results="$test_results $(assert_greater_than $remote_calls 0)"
 
 # AND blubee does not create folders without parents in paths
-remote_calls=$(echo "$output" | grep -e "ssh.*$user@$host.*mkdir.*$backup_dir/$name/[0-9]\{8\}_[0-9]\{6\}/{\]\[@£äøæ" | wc -l)
+remote_calls=$(echo "$output" | grep -e "ssh.*$user@$host.*mkdir.*\"$backup_dir/$name/[0-9]\{8\}_[0-9]\{6\}/{\]\[@£äøæ\"" | wc -l)
 test_results="$test_results $(assert_equal_numbers $remote_calls 0)"
 
 echo "remote_destination_backup_with_unorthodox_characters_in_path.test.sh\nRESULTS:"

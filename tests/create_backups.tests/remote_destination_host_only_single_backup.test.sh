@@ -57,7 +57,7 @@ remote_calls=$(echo "$output" | grep -e "rsync.*$host:$backup_dir/$name/[0-9]\{8
 test_results="$test_results $(assert_equal_numbers $remote_calls 4)"
 
 # AND blubee has created the expected folders for backup on the remote
-remote_calls=$(echo "$output" | grep -e "ssh.*$host.*mkdir.*$backup_dir/$name" | wc -l)
+remote_calls=$(echo "$output" | grep -e "ssh.*$host.*mkdir.*\"$backup_dir/$name.*\"" | wc -l)
 test_results="$test_results $(assert_greater_than $remote_calls 0)"
 
 echo "remote_destination_host_only_single_backup.test.sh\nRESULTS:"
