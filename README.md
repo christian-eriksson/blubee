@@ -61,6 +61,10 @@ To run blubee call it like:
 blubee [-c <config-path>] -b <backup.json-path> [options] command
 ```
 
+**NOTE:** you may want to enable login with SSH keys rather than passwords if
+you backup to a remote server (which you should). with OpenSSH you can use
+`ssh-copy-id <user>@<remote-host>`.
+
 ### `backup.json`
 
 For defining a backup job, blubee expects a `backup.json` this file is passed to blubee for all commands. Here is a small example:
