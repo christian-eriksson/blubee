@@ -10,27 +10,37 @@ backup_version="$(date '+%Y%m%d_%H%M%S')"
 
 while getopts ":s:d:r:xh:u:v:p:" option; do
     case "${option}" in
-        d)
-            destination_root=${OPTARG};;
-        s)
-            source_paths=${OPTARG};;
-        r)
-            source_root=${OPTARG};;
-        x)
-            dry_run="--dry-run";;
-        u)
-            user=${OPTARG};;
-        h)
-            host=${OPTARG};;
-        p)
-            port=${OPTARG};;
-        v)
-            backup_version=${OPTARG};;
-        :)
-            echo "Missing argument for option $OPTARG"
-            exit 1;;
-        ?)
-            echo "Unrecognized option '$OPTARG'";;
+    d)
+        destination_root=${OPTARG}
+        ;;
+    s)
+        source_paths=${OPTARG}
+        ;;
+    r)
+        source_root=${OPTARG}
+        ;;
+    x)
+        dry_run="--dry-run"
+        ;;
+    u)
+        user=${OPTARG}
+        ;;
+    h)
+        host=${OPTARG}
+        ;;
+    p)
+        port=${OPTARG}
+        ;;
+    v)
+        backup_version=${OPTARG}
+        ;;
+    :)
+        echo "Missing argument for option $OPTARG"
+        exit 1
+        ;;
+    ?)
+        echo "Unrecognized option '$OPTARG'"
+        ;;
     esac
 done
 
@@ -68,11 +78,23 @@ test_nonexistent_link "$latest_link" "$message" "$host" "$user" "$port"
 
 index=0
 source_path="$(dequote_string "$(get_list_item "$source_paths" "$index")")"
+if [ "$?" -ne "0" ]; then
+    echo "Could not get source paths from ${source_paths}, json may be malformed"
+    exit 4
+fi
+
+exit_code=0
 while [ "$source_path" != "null" ]; do
     source_suffix=$(trim_right_slash "$(trim_left_slash "$source_path")")
     backup_path_suffix=$(trim_right_slash "$(trim_to_first_right_slash "$source_suffix")")
     destination=$(trim_right_slash "$backup_path/$backup_path_suffix")
     [ -z "$dry_run" ] && create_directory "$destination" "$host" "$user" "$port"
+
+    if [ "$?" -ne "0" ]; then
+        echo "Could not not create directory ${destination}"
+        exit_code=10
+    fi
+
     source="$source_root/$source_suffix"
 
     if [ -z "$port" ]; then
@@ -80,19 +102,45 @@ while [ "$source_path" != "null" ]; do
             --link-dest "$latest_link/$backup_path_suffix" \
             "$source" \
             "$remote_prefix$destination"
+
+        if [ "$?" -ne "0" ]; then
+            echo "Unable to backup ${source} to ${remote_prefix}${destination}"
+            exit_code=10
+        fi
     else
         rsync -aE --protect-args --progress --delete $dry_run --rsh="ssh -p $port" \
             --link-dest "$latest_link/$backup_path_suffix" \
             "$source" \
             "$remote_prefix$destination"
+
+        if [ "$?" -ne "0" ]; then
+            echo "Unable to backup ${source} to ${remote_prefix}${destination}"
+            exit_code=10
+        fi
     fi
 
     index=$((index + 1))
     source_path="$(dequote_string "$(get_list_item "$source_paths" "$index")")"
+    if [ "$?" -ne "0" ]; then
+        echo "Could not get source paths from ${source_paths}"
+        exit_code=15
+    fi
 done
+
+if [ "$exit_code" -ne "0" ]; then
+    exit $exit_code
+fi
 
 if [ -z "$dry_run" ]; then
     remove_path "$latest_link" "$host" "$user" "$port"
-    create_link "$backup_path" "$latest_link" "$host" "$user" "$port"
-fi
+    if [ "$?" -ne "0" ]; then
+        echo "Could not remove previous link to latest backup"
+        exit 20
+    fi
 
+    create_link "$backup_path" "$latest_link" "$host" "$user" "$port"
+    if [ "$?" -ne "0" ]; then
+        echo "Could not link to latest backup"
+        exit 30
+    fi
+fi
