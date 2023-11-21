@@ -32,8 +32,16 @@ At the moment the build script builds for all supported package managers so you'
 
 Build the package as `<version>` then, on a Debian based system run:
 
+```sh
+apt install dist/blubee_<version>_all.deb
 ```
-# apt install dist/blubee_<version>_all.deb
+
+On Arch you can run:
+
+```sh
+tar -xvf dist/blubee_<version>_all_aur.tar.gz
+cd blubee_<version>_all_aur
+mkpkg
 ```
 
 You are now ready to run `blubee`.
