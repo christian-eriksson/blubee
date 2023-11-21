@@ -27,28 +27,33 @@ panic() {
 
 while getopts ":hb:c:n:d:v" option; do
     case "${option}" in
-        b)
-            backup_json_file=$OPTARG;;
-        c)
-            config_file=$OPTARG;;
-        n)
-            config_name=$OPTARG;;
-        d)
-            backup_datetime=$OPTARG;;
-        h)
-            print_help
-            exit 0
-            ;;
-        v)
-            cat $script_dir/blubee.info
-            exit 0
-            ;;
-        :)
-            echo "Missing argument for option '$OPTARG'"
-            panic
-            ;;
-        ?)
-            echo "Unrecognized option '$OPTARG'";;
+    b)
+        backup_json_file=$OPTARG
+        ;;
+    c)
+        config_file=$OPTARG
+        ;;
+    n)
+        config_name=$OPTARG
+        ;;
+    d)
+        backup_datetime=$OPTARG
+        ;;
+    h)
+        print_help
+        exit 0
+        ;;
+    v)
+        cat $script_dir/blubee.info
+        exit 0
+        ;;
+    :)
+        echo "Missing argument for option '$OPTARG'"
+        panic
+        ;;
+    ?)
+        echo "Unrecognized option '$OPTARG'"
+        ;;
     esac
 done
 
@@ -94,6 +99,7 @@ backup() {
 
     configs_count=$(list_length "$backup_configs")
     config_index=0
+    exit_code=0
     while [ "$config_index" -lt "$configs_count" ]; do
         config=$(get_list_item "$backup_configs" "$config_index")
         config_index=$((config_index + 1))
@@ -112,7 +118,10 @@ backup() {
         sources_list=$(get_json_element ".paths" "$config")
 
         $script_dir/backup.sh -r "$source_root" -s "$sources_list" $destination_user $destination_host $destination_port -d "$destination_path/$config_name" -v "$backup_version" $additional_options
+        result_code=$?
+        [ "$result_code" -ne "0" ] && exit_code=$result_code
     done
+    exit $exit_code
 }
 
 restore() {
@@ -137,6 +146,7 @@ restore() {
     backup_configs=$(get_json_element '.backup_configs' "$backup_json")
     configs_count=$(list_length "$backup_configs")
     config_index=0
+    exit_code=0
     while [ "$config_index" -lt "$configs_count" ]; do
         config=$(get_list_item "$backup_configs" "$config_index")
         config_index=$((config_index + 1))
@@ -157,42 +167,44 @@ restore() {
         $script_dir/restore.sh -r "$restore_path" -s "$backups_path/$config_name" -p "$sources_list" \
             $destination_user $destination_host $destination_port \
             $restore_datetime $restore_backup_copy $additional_options
-        exit_code=$?
-        [ "$exit_code" -ne "0" ] && exit $exit_code
+        result_code=$?
+        [ "$result_code" -ne "0" ] && exit_code=$result_code
     done
-    exit 0
+    exit $exit_code
+
 }
 
 backup_config_json=$(cat $backup_json_file)
 case "$command" in
+backup)
+    backup "$backup_config_json" "$config_name"
+    exit $?
+    ;;
+restore)
+    restore "$backup_config_json" "$RESTORE_BACKUP_PATH" "$config_name" "$backup_datetime"
+    exit $?
+    ;;
+dry)
+    sub_command_index=$(expr $OPTIND + 1)
+    [ $sub_command_index -gt $# ] && echo "You need to pass a command to run in dry mode!" && panic
+    sub_command=$(echo $@ | cut -d' ' -f$sub_command_index)
+    case "$sub_command" in
     backup)
-        backup "$backup_config_json" "$config_name"
-        ;;
-    restore)
-        restore "$backup_config_json" "$RESTORE_BACKUP_PATH" "$config_name" "$backup_datetime"
+        backup "$backup_config_json" "$config_name" "-x"
         exit $?
         ;;
-    dry)
-        sub_command_index=$(expr $OPTIND + 1)
-        [ $sub_command_index -gt $# ] && echo "You need to pass a command to run in dry mode!" && panic
-        sub_command=$(echo $@ | cut -d' ' -f$sub_command_index)
-        case "$sub_command" in
-            backup)
-                backup "$backup_config_json" "$config_name" "-x"
-                ;;
-            restore)
-                restore "$backup_config_json" "$RESTORE_BACKUP_PATH" "$config_name" "$backup_datetime" "-x"
-                exit $?
-                ;;
-            *)
-                echo "Unrecognized sub command for dry run '$sub_command'.\n"
-                panic
-                ;;
-        esac
+    restore)
+        restore "$backup_config_json" "$RESTORE_BACKUP_PATH" "$config_name" "$backup_datetime" "-x"
+        exit $?
         ;;
     *)
-        echo "Unrecognized command '$command'.\n"
+        echo "Unrecognized sub command for dry run '$sub_command'.\n"
         panic
         ;;
+    esac
+    ;;
+*)
+    echo "Unrecognized command '$command'.\n"
+    panic
+    ;;
 esac
-
