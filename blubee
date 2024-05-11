@@ -100,6 +100,7 @@ backup() {
     configs_count=$(list_length "$backup_configs")
     config_index=0
     exit_code=0
+    error_file="/tmp/blubee_errors_${backup_version}"
     while [ "$config_index" -lt "$configs_count" ]; do
         config=$(get_list_item "$backup_configs" "$config_index")
         config_index=$((config_index + 1))
@@ -117,10 +118,17 @@ backup() {
 
         sources_list=$(get_json_element ".paths" "$config")
 
-        $script_dir/backup.sh -r "$source_root" -s "$sources_list" $destination_user $destination_host $destination_port -d "$destination_path/$config_name" -v "$backup_version" $additional_options
+        $script_dir/backup.sh -r "$source_root" -s "$sources_list" \
+            $destination_user $destination_host $destination_port \
+            -d "$destination_path/$config_name" -v "$backup_version" \
+            $additional_options 2>$error_file
         result_code=$?
         [ "$result_code" -ne "0" ] && exit_code=$result_code
     done
+    if [ -f "${error_file}" ]; then
+        cat $error_file
+        rm $error_file
+    fi
     exit $exit_code
 }
 
@@ -147,6 +155,7 @@ restore() {
     configs_count=$(list_length "$backup_configs")
     config_index=0
     exit_code=0
+    error_file="/tmp/blubee_errors_${backup_version}"
     while [ "$config_index" -lt "$configs_count" ]; do
         config=$(get_list_item "$backup_configs" "$config_index")
         config_index=$((config_index + 1))
@@ -166,10 +175,14 @@ restore() {
 
         $script_dir/restore.sh -r "$restore_path" -s "$backups_path/$config_name" -p "$sources_list" \
             $destination_user $destination_host $destination_port \
-            $restore_datetime $restore_backup_copy $additional_options
+            $restore_datetime $restore_backup_copy $additional_options 2>$error_file
         result_code=$?
         [ "$result_code" -ne "0" ] && exit_code=$result_code
     done
+    if [ -f "${error_file}" ]; then
+        cat $error_file
+        rm $error_file
+    fi
     exit $exit_code
 
 }
