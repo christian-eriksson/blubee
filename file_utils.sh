@@ -78,3 +78,25 @@ test_nonexistent_link() {
     fi
 }
 
+directory_exists() {
+    path="$1"
+    host="$2"
+    user="$3"
+    port="$4"
+
+    [ -n "$port" ] && port_flag="-p$port"
+
+    if [ -z "$host" ]; then
+        [ -d "$path" ]
+        return $?
+    else
+        if [ -z "$user" ]; then
+            ssh $port_flag $host "[ -d \"$path\" ]"
+            return $?
+        else
+            ssh $port_flag $user@$host "[ -d \"$path\" ]"
+            return $?
+        fi
+    fi
+}
+

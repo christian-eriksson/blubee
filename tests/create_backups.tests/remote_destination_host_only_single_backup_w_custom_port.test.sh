@@ -9,10 +9,10 @@ cd $test_dir
 
 . ../test_utils.sh
 
-backup_json="$test_dir/remote_destination_host_only_single_backup.backup.json"
-backup_dir="$test_dir/remote_destination_host_only_single_backup.backup"
+backup_json="$test_dir/remote_destination_host_only_single_backup_w_custom_port.backup.json"
+backup_dir="$test_dir/remote_destination_host_only_single_backup_w_custom_port.backup"
 root="$test_dir/test_files_root"
-root_copy="$test_dir/test_files_root_remote_destination_host_only_single_backup.copy"
+root_copy="$test_dir/test_files_root_remote_destination_host_only_single_backup_w_custom_port.copy"
 cp -r $root $root_copy
 
 activate_mock "rsync" "$test_root"
@@ -67,5 +67,6 @@ echo "$(asserts_to_text "$test_results")"
 
 # clean up
 rm -r "$root_copy"
+[ -e "$backup_dir" ] && rm -r "$backup_dir"
 rm "$backup_json"
 

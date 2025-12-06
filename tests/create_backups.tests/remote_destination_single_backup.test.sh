@@ -67,5 +67,6 @@ echo "$(asserts_to_text "$test_results")"
 
 # clean up
 rm -r "$root_copy"
+[ -e "$backup_dir" ] && rm -r "$backup_dir"
 rm "$backup_json"
 

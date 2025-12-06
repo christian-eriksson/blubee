@@ -88,11 +88,17 @@ while [ "$source_path" != "null" ]; do
     source_suffix=$(trim_right_slash "$(trim_left_slash "$source_path")")
     backup_path_suffix=$(trim_right_slash "$(trim_to_first_right_slash "$source_suffix")")
     destination=$(trim_right_slash "$backup_path/$backup_path_suffix")
-    [ -z "$dry_run" ] && create_directory "$destination" "$host" "$user" "$port"
-
-    if [ "$?" -ne "0" ]; then
-        echo "Could not not create directory ${destination}"
-        exit_code=10
+    if ! directory_exists "$destination" "$host" "$user" "$port"; then
+        destination_created="$destination"
+        while ! directory_exists "$(dirname "$destination_created")" "$host" "$user" "$port"; do
+            destination_created="$(dirname "$destination_created")"
+        done
+        create_directory "$destination" "$host" "$user" "$port"
+        return_code=$?
+        if [ "$return_code" -ne "0" ]; then
+            echo "Could not create directory ${destination}, failed with code: ${return_code}"
+            exit_code=10
+        fi
     fi
 
     source="$source_root/$source_suffix"
@@ -117,6 +123,10 @@ while [ "$source_path" != "null" ]; do
             echo "Unable to backup ${source} to ${remote_prefix}${destination}"
             exit_code=10
         fi
+    fi
+
+    if [ ! -z "$destination_created" ] && [ -n "$dry_run" ]; then
+        remove_path "$destination_created" "$host" "$user" "$port"
     fi
 
     index=$((index + 1))

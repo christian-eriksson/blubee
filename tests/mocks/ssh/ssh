@@ -2,3 +2,32 @@
 
 echo -e "MOCK!! ssh ${@}\n"
 
+remote_command=""
+parse_next_as_command=0
+
+# SSH args format: [options] [user@]hostname [command]
+for arg in "$@"; do
+    if [ "${arg#-}" != "$arg" ]; then
+        case "$arg" in
+            -p*) ;; # Port option
+            -o) ;; # SSH options
+            -v*) ;; # Verbose flags
+            *) ;;
+        esac
+    else
+        if [ -z "$remote_command" ] && echo "$arg" | grep -qE '^[a-zA-Z0-9._@-]+$'; then
+            parse_next_as_command=1
+        elif [ "$parse_next_as_command" = "1" ]; then
+            remote_command="$arg"
+            break
+        fi
+    fi
+done
+
+# Run remote command locally
+if [ -n "$remote_command" ]; then
+    eval "$remote_command"
+    exit $?
+fi
+
+exit 0
