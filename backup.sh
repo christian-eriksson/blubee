@@ -5,6 +5,7 @@ script_dir="${0%/*}"
 . $script_dir/string_utils.sh
 . $script_dir/file_utils.sh
 . $script_dir/json_utils.sh
+. $script_dir/debug.sh
 
 backup_version="$(date '+%Y%m%d_%H%M%S')"
 
@@ -93,6 +94,7 @@ while [ "$source_path" != "null" ]; do
         while ! directory_exists "$(dirname "$destination_created")" "$host" "$user" "$port"; do
             destination_created="$(dirname "$destination_created")"
         done
+        debug_echo "Create directory ${destination} ('destination: $destination' 'host: $host' 'user: $user' 'port: $port')"
         create_directory "$destination" "$host" "$user" "$port"
         return_code=$?
         if [ "$return_code" -ne "0" ]; then
@@ -103,8 +105,13 @@ while [ "$source_path" != "null" ]; do
 
     source="$source_root/$source_suffix"
 
+    if is_debug; then
+        rsync_verbose="-vv"
+        ssh_verbose="-vvv"
+    fi
+
     if [ -z "$port" ]; then
-        rsync -aE --protect-args --progress --delete $dry_run \
+        rsync -aE ${rsync_verbose} --protect-args --progress --delete $dry_run --rsh="ssh $ssh_verbose" \
             --link-dest "$latest_link/$backup_path_suffix" \
             "$source" \
             "$remote_prefix$destination"
@@ -115,7 +122,7 @@ while [ "$source_path" != "null" ]; do
             exit_code=11
         fi
     else
-        rsync -aE --protect-args --progress --delete $dry_run --rsh="ssh -p $port" \
+        rsync -aE ${rsync_verbose} --protect-args --progress --delete $dry_run --rsh="ssh -p $port $ssh_verbose" \
             --link-dest "$latest_link/$backup_path_suffix" \
             "$source" \
             "$remote_prefix$destination"
