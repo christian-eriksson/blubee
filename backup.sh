@@ -108,20 +108,22 @@ while [ "$source_path" != "null" ]; do
             --link-dest "$latest_link/$backup_path_suffix" \
             "$source" \
             "$remote_prefix$destination"
+        return_code=$?
 
-        if [ "$?" -ne "0" ]; then
-            echo "Unable to backup ${source} to ${remote_prefix}${destination}"
-            exit_code=10
+        if [ "$return_code" -ne "0" ]; then
+            echo "Unable to backup ${source} to ${remote_prefix}${destination}, failed with code: '$return_code'"
+            exit_code=11
         fi
     else
         rsync -aE --protect-args --progress --delete $dry_run --rsh="ssh -p $port" \
             --link-dest "$latest_link/$backup_path_suffix" \
             "$source" \
             "$remote_prefix$destination"
+        return_code=$?
 
-        if [ "$?" -ne "0" ]; then
-            echo "Unable to backup ${source} to ${remote_prefix}${destination}"
-            exit_code=10
+        if [ "$return_code" -ne "0" ]; then
+            echo "Unable to backup ${source} to ${remote_prefix}${destination} on port '$port', failed with code: '$return_code'"
+            exit_code=12
         fi
     fi
 
@@ -143,14 +145,16 @@ fi
 
 if [ -z "$dry_run" ]; then
     remove_path "$latest_link" "$host" "$user" "$port"
-    if [ "$?" -ne "0" ]; then
-        echo "Could not remove previous link to latest backup"
+    return_code=$?
+    if [ "$return_code" -ne "0" ]; then
+        echo "Could not remove previous link to latest backup, failed with code: '$return_code'"
         exit 20
     fi
 
     create_link "$backup_path" "$latest_link" "$host" "$user" "$port"
-    if [ "$?" -ne "0" ]; then
-        echo "Could not link to latest backup"
+    return_code=$?
+    if [ "$return_code" -ne "0" ]; then
+        echo "Could not link to latest backup, failed with code: '$return_code'"
         exit 30
     fi
 fi
