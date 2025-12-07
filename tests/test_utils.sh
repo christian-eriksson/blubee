@@ -19,12 +19,22 @@ activate_blubee_mock() {
     sed -i 's%/etc/blubee/blubee %../mocks/blubee/blubee %g' $mocked_file
 }
 
+_trim_right_slash() {
+    path="$1"
+    echo "${path%/}"
+}
+
+_get_path_name() {
+    path="$1"
+    echo "${path##*/}"
+}
+
 get_a_backup_datetime() {
-    backup_path="$(trim_right_slash $1)"
+    backup_path="$(_trim_right_slash $1)"
     for dir in $backup_path/*/; do
         [ -d "$dir" ] || continue
-        dir_no_slash="$(trim_right_slash "$dir")"
-        dir_name="$(get_path_name "$dir_no_slash")"
+        dir_no_slash="$(_trim_right_slash "$dir")"
+        dir_name="$(_get_path_name "$dir_no_slash")"
         if [ "$dir_name" != "latest" ]; then
             datetime="$dir_name"
         fi
