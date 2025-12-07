@@ -15,10 +15,10 @@ $ git clone https://github.com/christian-eriksson/blubee.git
 To build blubee, run:
 
 ```
-# ./build.sh <version>
+# sudo ./build.sh <version>
 ```
 
-this script builds packages for Debian and Arch as well as a tar ball with a configured version of blubee. The build result can be found in `dist/`.
+this script builds packages for Debian and Arch as well as a tar ball with a configured version of blubee. The build result can be found in `dist/`. We use `sudo` to be able to set the correct permissions to the files in the packages.
 
 ### Build dependencies
 
