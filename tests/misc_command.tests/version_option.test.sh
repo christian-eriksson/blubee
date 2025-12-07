@@ -16,6 +16,9 @@ blubee_info=$test_dir/blubee.info
 # GIVEN a blubee script
 cp ../../blubee $blubee_script
 
+# AND it's dependencies
+cp ../../debug.sh $test_dir
+
 # AND a blubee.info file next to the script
 echo "some info for blubee to display" > $blubee_info
 
@@ -39,4 +42,5 @@ echo "$(asserts_to_text "$test_results")"
 rm "$blubee_result"
 rm "$blubee_info"
 rm "$blubee_script"
+rm "$test_dir/debug.sh"
 

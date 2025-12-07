@@ -2,6 +2,8 @@
 
 script_dir="${0%/*}"
 
+. $script_dir/debug.sh
+
 print_help() {
     echo "usage: blubee [-c <config-file>] -b <backup.json> [options] <command>\n"
     echo "command:"
@@ -118,6 +120,10 @@ backup() {
 
         sources_list=$(get_json_element ".paths" "$config")
 
+        debug_echo "RUNNING: "$script_dir/backup.sh -r "$source_root" -s "$sources_list" \
+            $destination_user $destination_host $destination_port \
+            -d "$destination_path/$config_name" -v "$backup_version" \
+            "$additional_options 2>$error_file"
         $script_dir/backup.sh -r "$source_root" -s "$sources_list" \
             $destination_user $destination_host $destination_port \
             -d "$destination_path/$config_name" -v "$backup_version" \

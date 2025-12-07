@@ -73,6 +73,7 @@ latest_link="$destination_root/latest"
 
 message="First backup! Link to latest previous backup does not exist, it will be created."
 test_nonexistent_link "$latest_link" "$message" "$host" "$user" "$port"
+debug_echo "INPUT CONFIG: " "'$host'" "'$user'" "'$port'"
 
 [ ! -z $user ] && remote_prefix="$user@"
 [ ! -z $host ] && remote_prefix="$remote_prefix$host:"
