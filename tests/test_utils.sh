@@ -32,6 +32,38 @@ get_a_backup_datetime() {
     echo "$datetime"
 }
 
+assert_files_are_hardlinked() {
+    file_one="$1"
+    file_two="$2"
+
+    if [ ! -f "$file_one" ] || [ ! -f "$file_two" ]; then
+        echo "1"
+        return
+    fi
+
+    inode_one=$(stat -c '%i' "$file_one" 2>/dev/null)
+    inode_two=$(stat -c '%i' "$file_two" 2>/dev/null)
+
+    [ "$inode_one" = "$inode_two" ]
+    echo "$?"
+}
+
+assert_files_are_not_hardlinked() {
+    file_one="$1"
+    file_two="$2"
+
+    if [ ! -f "$file_one" ] || [ ! -f "$file_two" ]; then
+        echo "1"
+        return
+    fi
+
+    inode_one=$(stat -c '%i' "$file_one" 2>/dev/null)
+    inode_two=$(stat -c '%i' "$file_two" 2>/dev/null)
+
+    [ "$inode_one" != "$inode_two" ]
+    echo "$?"
+}
+
 count() {
     [ -e "$1" ] && printf '%s\n' "$#" || printf '%s\n' 0
 }
