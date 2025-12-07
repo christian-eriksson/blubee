@@ -5,6 +5,7 @@ script_dir="${0%/*}"
 . $script_dir/string_utils.sh
 . $script_dir/file_utils.sh
 . $script_dir/json_utils.sh
+. $script_dir/ssh_config.sh
 . $script_dir/debug.sh
 
 backup_version="$(date '+%Y%m%d_%H%M%S')"
@@ -112,7 +113,7 @@ while [ "$source_path" != "null" ]; do
     fi
 
     if [ -z "$port" ]; then
-        rsync -aE ${rsync_verbose} --protect-args --progress --delete $dry_run --rsh="ssh $ssh_verbose" \
+        rsync -aE ${rsync_verbose} --protect-args --progress --delete $dry_run --rsh="ssh $SSH_OPTS $ssh_verbose" \
             --link-dest "$latest_link/$backup_path_suffix" \
             "$source" \
             "$remote_prefix$destination"
@@ -123,7 +124,7 @@ while [ "$source_path" != "null" ]; do
             exit_code=11
         fi
     else
-        rsync -aE ${rsync_verbose} --protect-args --progress --delete $dry_run --rsh="ssh -p $port $ssh_verbose" \
+        rsync -aE ${rsync_verbose} --protect-args --progress --delete $dry_run --rsh="ssh $SSH_OPTS -p $port $ssh_verbose" \
             --link-dest "$latest_link/$backup_path_suffix" \
             "$source" \
             "$remote_prefix$destination"

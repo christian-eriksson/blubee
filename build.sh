@@ -108,7 +108,7 @@ build_arch() {
     cd $original_dir
 }
 
-config_files="blubee backup.sh restore.sh json_utils.sh string_utils.sh file_utils.sh debug.sh blubee.info blubee.conf"
+config_files="blubee backup.sh restore.sh json_utils.sh string_utils.sh file_utils.sh ssh_config.sh debug.sh blubee.info blubee.conf"
 launch_file="launcher"
 dirs=$(create_file_tree "$package_root" "$build_version" "$config_files" "$launch_file")
 conf_dir=$(echo "$dirs" | cut -d' ' -f1)

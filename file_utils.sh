@@ -1,6 +1,7 @@
 #!/bin/sh
 
 script_dir="${0%/*}"
+. $script_dir/ssh_config.sh
 . $script_dir/debug.sh
 
 if is_debug; then
@@ -25,14 +26,14 @@ remove_path() {
         fi
     else
         if [ -z "$user" ]; then
-            ssh $ssh_verbose $port_flag $host "rm -rf \"$path\""
+            ssh $ssh_verbose $SSH_OPTS $port_flag $host "rm -rf \"$path\""
             return_code=$?
             if [ "$return_code" -ne "0" ]; then
                 echo "Failed to remove remote directory on $host: $path. Failed with return code $return_code"
                 return 32
             fi
         else
-            ssh $ssh_verbose $port_flag $user@$host "rm -rf \"$path\""
+            ssh $ssh_verbose $SSH_OPTS $port_flag $user@$host "rm -rf \"$path\""
             return_code=$?
             if [ "$return_code" -ne "0" ]; then
                 echo "Failed to remove remote directory on $host as $user: $path. Failed with return code $return_code"
@@ -59,7 +60,7 @@ create_directory() {
         fi
     else
         if [ -z "$user" ]; then
-            ssh $ssh_verbose $port_flag "$host" "mkdir ${verbose_flag} -p \"$path\""
+            ssh $ssh_verbose $SSH_OPTS $port_flag "$host" "mkdir ${verbose_flag} -p \"$path\""
             return_code=$?
             if [ "$return_code" -ne "0" ]; then
                 echo "Failed to create remote directory on $host: $path. Failed with return code $return_code"
@@ -67,7 +68,7 @@ create_directory() {
             fi
         else
             debug_echo "About to create remote directory on $host as $user: $path (port: $port)"
-            ssh $ssh_verbose $port_flag "$user@$host" "mkdir ${verbose_flag} -p \"$path\""
+            ssh $ssh_verbose $SSH_OPTS $port_flag "$user@$host" "mkdir ${verbose_flag} -p \"$path\""
             return_code=$?
             debug_echo "SSH command returned code $return_code"
             if [ "$return_code" -ne "0" ]; then
@@ -96,14 +97,14 @@ create_link() {
         fi
     else
         if [ -z "$user" ]; then
-            ssh $ssh_verbose $port_flag $host "ln -s \"$target\" \"$link_path\""
+            ssh $ssh_verbose $SSH_OPTS $port_flag $host "ln -s \"$target\" \"$link_path\""
             return_code=$?
             if [ "$return_code" -ne "0" ]; then
                 echo "Failed to create remote link on $host: $path. Failed with return code $return_code"
                 return 52
             fi
         else
-            ssh $ssh_verbose $port_flag $user@$host "ln -s \"$target\" \"$link_path\""
+            ssh $ssh_verbose $SSH_OPTS $port_flag $user@$host "ln -s \"$target\" \"$link_path\""
             return_code=$?
             if [ "$return_code" -ne "0" ]; then
                 echo "Failed to create remote link on $host as $user: $path. Failed with return code $return_code"
@@ -126,9 +127,9 @@ test_nonexistent_link() {
         [ ! -L $link_path ] && echo "$message"
     else
         if [ -z "$user" ]; then
-            ssh $ssh_verbose $port_flag $host "[ ! -L \"$link_path\" ] && echo \"$message\""
+            ssh $ssh_verbose $SSH_OPTS $port_flag $host "[ ! -L \"$link_path\" ] && echo \"$message\""
         else
-            ssh $ssh_verbose $port_flag $user@$host "[ ! -L \"$link_path\" ] && echo \"$message\""
+            ssh $ssh_verbose $SSH_OPTS $port_flag $user@$host "[ ! -L \"$link_path\" ] && echo \"$message\""
         fi
     fi
 }

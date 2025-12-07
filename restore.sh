@@ -5,6 +5,7 @@ script_dir="${0%/*}"
 . $script_dir/string_utils.sh
 . $script_dir/file_utils.sh
 . $script_dir/json_utils.sh
+. $script_dir/ssh_config.sh
 . $script_dir/debug.sh
 
 datetime_of_snapshot="latest"
@@ -86,15 +87,15 @@ while [ "$restore_path" != "null" ]; do
     if [ ! -z "$backup_copy_path" ]; then
         restore_backup_dir="$backup_copy_path/$datetime_of_snapshot/$restore_path_suffix"
         if [ -z "$port" ]; then
-            rsync -aE ${rsync_verbose} --protect-args --progress --delete $dry_run --rsh="ssh $ssh_verbose" --backup --backup-dir "$restore_backup_dir" "$source_path" "$target_dir"
+            rsync -aE ${rsync_verbose} --protect-args --progress --delete $dry_run --rsh="ssh $SSH_OPTS $ssh_verbose" --backup --backup-dir "$restore_backup_dir" "$source_path" "$target_dir"
         else
-            rsync -aE ${rsync_verbose} --protect-args --progress --delete $dry_run --rsh="ssh -p $port $ssh_verbose" --backup --backup-dir "$restore_backup_dir" "$source_path" "$target_dir"
+            rsync -aE ${rsync_verbose} --protect-args --progress --delete $dry_run --rsh="ssh $SSH_OPTS -p $port $ssh_verbose" --backup --backup-dir "$restore_backup_dir" "$source_path" "$target_dir"
         fi
     else
         if [ -z "$port" ]; then
-            rsync -aE ${rsync_verbose} --protect-args --progress --delete $dry_run --rsh="ssh $ssh_verbose" "$source_path" "$target_dir"
+            rsync -aE ${rsync_verbose} --protect-args --progress --delete $dry_run --rsh="ssh $SSH_OPTS $ssh_verbose" "$source_path" "$target_dir"
         else
-            rsync -aE ${rsync_verbose} --protect-args --progress --delete $dry_run --rsh="ssh -p $port $ssh_verbose" "$source_path" "$target_dir"
+            rsync -aE ${rsync_verbose} --protect-args --progress --delete $dry_run --rsh="ssh $SSH_OPTS -p $port $ssh_verbose" "$source_path" "$target_dir"
         fi
     fi
 
