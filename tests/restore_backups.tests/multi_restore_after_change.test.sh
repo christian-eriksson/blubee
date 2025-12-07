@@ -1,5 +1,6 @@
 #!/bin/sh
 
+script_name="multi_restore_after_change.test.sh"
 relative_dir="${0%/*}"
 cd $relative_dir
 
@@ -74,7 +75,7 @@ echo "new file" > "$source_root/dir3/new-file-no-backup"
 # THEN the restored source directory has the expected files, content and structure
 test_results=$(assert_dirs_equal "$source_root" "$test_dir/multi_restore_after_change.expected")
 
-echo "multi_restore_after_change.test.sh\nRESULTS:"
+echo "$script_name\nRESULTS:"
 echo "$(asserts_to_text "$test_results")"
 
 # clean up

@@ -1,5 +1,6 @@
 #!/bin/sh
 
+script_name="version_option.test.sh"
 relative_dir="${0%/*}"
 cd $relative_dir
 test_dir="$(pwd)"
@@ -35,7 +36,7 @@ test_results="$exit_code"
 # AND blubee outputs the blubee.info config
 test_results="$test_results $(assert_equal_files $blubee_info $blubee_result)"
 
-echo "remote_destination_host_only_single_backup.test.sh\nRESULTS:"
+echo "$script_name\nRESULTS:"
 echo "$(asserts_to_text "$test_results")"
 
 # clean up

@@ -1,5 +1,6 @@
 #!/bin/sh
 
+script_name="remote_destination_backup_with_unorthodox_characters_in_path.test.sh"
 relative_dir="${0%/*}"
 cd $relative_dir
 test_dir="$(pwd)"
@@ -76,7 +77,7 @@ test_results="$test_results $(assert_greater_than $remote_calls 0)"
 remote_calls=$(echo "$output" | grep -e "ssh.*$user@$host.*mkdir.*\"$backup_dir/$name/[0-9]\{8\}_[0-9]\{6\}/{\]\[@£äøæ\"" | wc -l)
 test_results="$test_results $(assert_equal_numbers $remote_calls 0)"
 
-echo "remote_destination_backup_with_unorthodox_characters_in_path.test.sh\nRESULTS:"
+echo "$script_name\nRESULTS:"
 echo "$(asserts_to_text "$test_results")"
 
 # clean up

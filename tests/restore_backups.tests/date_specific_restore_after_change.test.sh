@@ -1,5 +1,6 @@
 #!/bin/sh
 
+script_name="date_specific_restore_after_change.test.sh"
 relative_dir="${0%/*}"
 cd $relative_dir
 
@@ -87,7 +88,7 @@ test_results="$?"
 # AND the restored source directory has the expected files, content and structure
 test_results="$test_results $(assert_dirs_equal "$source_root" "$test_dir/date_specific_restore_after_change.expected")"
 
-echo "date_specific_restore_after_change.test.sh\nRESULTS:"
+echo "$script_name\nRESULTS:"
 echo "$(asserts_to_text "$test_results")"
 
 # clean up

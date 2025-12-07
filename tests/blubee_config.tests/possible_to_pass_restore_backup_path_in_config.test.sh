@@ -1,5 +1,6 @@
 #!/bin/sh
 
+script_name="possible_to_pass_restore_backup_path_in_config.test.sh"
 relative_dir="${0%/*}"
 cd $relative_dir
 
@@ -54,7 +55,7 @@ echo "new file" > "$source_root/dir1/new-file"
 # THEN the restore backup copy directory will have the expected content
 test_results=$(assert_dirs_equal "$restore_backup_path/latest" "$test_dir/possible_to_pass_restore_backup_path_in_config.expected")
 
-echo "possible_to_pass_restore_backup_path_in_config.test.sh\nRESULTS:"
+echo "$script_name\nRESULTS:"
 echo "$(asserts_to_text "$test_results")"
 
 rm -r "$destination"

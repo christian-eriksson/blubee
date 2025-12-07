@@ -1,5 +1,6 @@
 #!/bin/sh
 
+script_name="remote_destination_only_user_restore.test.sh"
 relative_dir="${0%/*}"
 cd $relative_dir
 test_dir="$(pwd)"
@@ -52,7 +53,7 @@ exit_code="$?"
 # THEN blubee exits with error code
 test_results="$(assert_not_equal $exit_code 0)"
 
-echo "remote_destination_restore.test.sh\nRESULTS:"
+echo "$script_name\nRESULTS:"
 echo "$(asserts_to_text "$test_results")"
 
 # clean up

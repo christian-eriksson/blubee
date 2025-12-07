@@ -1,5 +1,6 @@
 #!/bin/sh
 
+script_name="remote_destination_single_backup_w_custom_port.test.sh"
 relative_dir="${0%/*}"
 cd $relative_dir
 test_dir="$(pwd)"
@@ -64,7 +65,7 @@ test_results="$test_results $(assert_equal_numbers $remote_calls 4)"
 remote_calls=$(echo "$output" | grep -e "ssh.*-p$port.*$user@$host.*mkdir.*\"$backup_dir/$name.*\"" | wc -l)
 test_results="$test_results $(assert_greater_than $remote_calls 0)"
 
-echo "remote_destination_single_backup.test.sh\nRESULTS:"
+echo "$script_name\nRESULTS:"
 echo "$(asserts_to_text "$test_results")"
 
 # clean up

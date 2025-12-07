@@ -1,5 +1,6 @@
 #!/bin/sh
 
+script_name="not_passing_restore_backup_in_config.test.sh"
 relative_dir="${0%/*}"
 cd $relative_dir
 test_dir="$(pwd)"
@@ -62,7 +63,7 @@ test_results="$test_results $(assert_equal_numbers "$backup_option_count" 0)"
 backup_dir_option_count=$(echo "$output" | grep --color -e "rsync.*--backup-dir " | wc -l)
 test_results="$test_results $(assert_equal_numbers "$backup_dir_option_count" 0)"
 
-echo "not_passing_restore_backup_in_config.test.sh.test.sh\nRESULTS:"
+echo "$script_name\nRESULTS:"
 echo "$(asserts_to_text "$test_results")"
 
 # clean up

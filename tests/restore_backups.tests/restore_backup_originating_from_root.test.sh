@@ -1,5 +1,6 @@
 #!/bin/sh
 
+script_name="restore_backup_originating_from_root.test.sh"
 relative_dir="${0%/*}"
 cd $relative_dir
 
@@ -57,7 +58,7 @@ test_results="$exit_code"
 result_dir="$root_copy"
 test_results=$(assert_dirs_equal "$result_dir" "$test_dir/restore_backup_originating_from_root.expected")
 
-echo "restore_backup_originating_from_root.test.sh\nRESULTS:"
+echo "$script_name\nRESULTS:"
 echo "$(asserts_to_text "$test_results")"
 
 # clean up

@@ -1,5 +1,6 @@
 #!/bin/sh
 
+script_name="remote_destination_user_only_single_backup.test.sh"
 relative_dir="${0%/*}"
 cd $relative_dir
 test_dir="$(pwd)"
@@ -48,7 +49,7 @@ output=$(./blubee -c "$config_path" -b "$backup_json" backup)
 # THEN blubee throws an error
 test_result="$(assert_not_equal "$?" 0)"
 
-echo "remote_destination_user_only_single_backup.test.sh\nRESULTS:"
+echo "$script_name\nRESULTS:"
 echo "$(asserts_to_text "$test_result")"
 
 # clean up

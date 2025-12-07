@@ -1,5 +1,6 @@
 #!/bin/sh
 
+script_name="fail_if_no_permissions_to_write_to_backup_copy_during_restore.test.sh"
 relative_dir="${0%/*}"
 cd $relative_dir
 
@@ -61,7 +62,7 @@ test_results="$test_results $(assert_not_equal "$exit_code" "0")"
 has_same_content=$(assert_dirs_equal "$source_root" "$test_dir/fail_if_no_permissions_to_write_to_backup_copy_during_restore.expected")
 test_results="$test_results $has_same_content"
 
-echo "fail_if_no_permissions_to_write_to_backup_copy_during_restore.test.sh\nRESULTS:"
+echo "$script_name\nRESULTS:"
 echo "$(asserts_to_text "$test_results")"
 
 rm -r "$destination"

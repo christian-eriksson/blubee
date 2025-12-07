@@ -1,5 +1,6 @@
 #!/bin/sh
 
+script_name="help_option.test.sh"
 relative_dir="${0%/*}"
 cd $relative_dir
 test_dir="$(pwd)"
@@ -21,6 +22,6 @@ test_results="$exit_code"
 usage_output_count=$(echo "$output" | grep -e "usage: blubee \[-c <config-file>\] -b <backup.json> \[options\] <command>" | wc -l)
 test_results="$test_results $(assert_greater_than "$usage_output_count" 0)"
 
-echo "remote_destination_host_only_single_backup.test.sh\nRESULTS:"
+echo "$script_name\nRESULTS:"
 echo "$(asserts_to_text "$test_results")"
 

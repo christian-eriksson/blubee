@@ -1,5 +1,6 @@
 #!/bin/sh
 
+script_name="date_specific_restore_after_delete_dry_run.test.sh"
 relative_dir="${0%/*}"
 cd $relative_dir
 
@@ -107,7 +108,7 @@ test_results="$test_results $(assert_dirs_equal "$destination/$name_two/$first_b
 test_results="$test_results $(assert_dirs_equal "$destination/$name_one/latest" "$test_dir/date_specific_restore_after_delete_dry_run.expected/second/$name_one")"
 test_results="$test_results $(assert_dirs_equal "$destination/$name_two/latest" "$test_dir/date_specific_restore_after_delete_dry_run.expected/second/$name_two")"
 
-echo "date_specific_restore_after_delete_dry_run.test.sh\nRESULTS:"
+echo "$script_name\nRESULTS:"
 echo "$(asserts_to_text "$test_results")"
 
 # clean up

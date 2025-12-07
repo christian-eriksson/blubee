@@ -1,5 +1,6 @@
 #!/bin/sh
 
+script_name="backup_with_same_datetime_if_config_takes_time.test.sh"
 relative_dir="${0%/*}"
 cd $relative_dir
 test_dir="$(pwd)"
@@ -75,7 +76,7 @@ datetime_two=$(get_a_backup_datetime "$destination/$name_two")
 
 test_results="$test_results $(assert_equal_strings "$datetime_one" "$datetime_two")"
 
-echo "backup_with_same_datetime_if_config_takes_time.test.sh\nRESULTS:"
+echo "$script_name\nRESULTS:"
 echo "$(asserts_to_text "$test_results")"
 
 # clean up

@@ -1,5 +1,6 @@
 #!/bin/sh
 
+script_name="date_specific_restore_after_change_dry_run.test.sh"
 relative_dir="${0%/*}"
 cd $relative_dir
 
@@ -121,7 +122,7 @@ test_results="$test_results $(assert_dirs_equal "$destination/$name_two/latest" 
 # AND the backuped directory retains its latest changes
 test_results="$test_results $(assert_dirs_equal "$source_root" "$test_dir/date_specific_restore_after_change_dry_run.expected/root")"
 
-echo "date_specific_restore_after_change_dry_run.test.sh\nRESULTS:"
+echo "$script_name\nRESULTS:"
 echo "$(asserts_to_text "$test_results")"
 
 # clean up

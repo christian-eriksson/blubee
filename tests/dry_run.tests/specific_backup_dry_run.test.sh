@@ -1,5 +1,6 @@
 #!/bin/sh
 
+script_name="specific_backup_dry_run.test.sh"
 relative_dir="${0%/*}"
 cd $relative_dir
 
@@ -67,7 +68,7 @@ test_results="$test_results $(assert_no_path "$backup_dir")"
 has_same_content=$(assert_dirs_equal "$root_copy" "$root")
 test_results="$test_results $has_same_content"
 
-echo "multi_backup_dry_run.test.sh\nRESULTS:"
+echo "$script_name\nRESULTS:"
 echo "$(asserts_to_text "$test_results")"
 
 # clean up

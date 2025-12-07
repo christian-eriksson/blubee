@@ -1,5 +1,6 @@
 #!/bin/sh
 
+script_name="remote_destination_only_host_restore.test.sh"
 relative_dir="${0%/*}"
 cd $relative_dir
 test_dir="$(pwd)"
@@ -53,7 +54,7 @@ test_results=""
 remote_calls=$(echo "$output" | grep -e "$host:$backup_dir/$name/latest/" | wc -l)
 test_results="$test_results $(assert_equal_numbers $remote_calls 4)"
 
-echo "remote_destination_only_host_restore.test.sh\nRESULTS:"
+echo "$script_name\nRESULTS:"
 echo "$(asserts_to_text "$test_results")"
 
 # clean up

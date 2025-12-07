@@ -1,5 +1,6 @@
 #!/bin/sh
 
+script_name="specific_restore_after_delete.test.sh"
 relative_dir="${0%/*}"
 cd $relative_dir
 
@@ -61,7 +62,7 @@ rm -r $source_root
 # THEN the restored source directory has the expected files, content and structure
 test_results=$(assert_dirs_equal "$source_root" "$test_dir/specific_restore_after_delete.expected")
 
-echo "specific_restore_after_delete.test.sh\nRESULTS:"
+echo "$script_name\nRESULTS:"
 echo "$(asserts_to_text "$test_results")"
 
 # clean up

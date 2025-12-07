@@ -1,5 +1,6 @@
 #!/bin/sh
 
+script_name="specific_backup.test.sh"
 relative_dir="${0%/*}"
 cd $relative_dir
 
@@ -66,7 +67,7 @@ test_results="$test_results $(assert_is_link "$destination/$name_two/latest")"
 has_same_content=$(assert_dirs_equal "$destination/$name_two/latest" "$test_dir/specific_backup.expected/$name_two")
 test_results="$test_results $has_same_content"
 
-echo "specific_backup.test.sh\nRESULTS:"
+echo "$script_name\nRESULTS:"
 echo "$(asserts_to_text "$test_results")"
 
 # clean up

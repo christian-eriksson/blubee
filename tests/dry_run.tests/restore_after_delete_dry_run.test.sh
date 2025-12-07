@@ -1,5 +1,6 @@
 #!/bin/sh
 
+script_name="restore_after_delete_dry_run.test.sh"
 relative_dir="${0%/*}"
 cd $relative_dir
 
@@ -55,7 +56,7 @@ test_results="$test_results $(assert_no_path "$root_copy")"
 # AND the backup is untouched
 test_results="$test_results $(assert_dirs_equal "$backup_dir/$name/latest" "$test_dir/restore_after_delete_dry_run.expected")"
 
-echo "restore_after_delete_dry_run.test.sh\nRESULTS:"
+echo "$script_name\nRESULTS:"
 echo "$(asserts_to_text "$test_results")"
 
 # clean up

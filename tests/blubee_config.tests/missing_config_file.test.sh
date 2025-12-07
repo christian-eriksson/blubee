@@ -1,5 +1,6 @@
 #!/bin/sh
 
+script_name="missing_config_file.test.sh"
 relative_dir="${0%/*}"
 cd $relative_dir
 
@@ -70,7 +71,7 @@ test_results="$test_results $(assert_dir_exists "$destination")"
 # AND nothing was restored
 test_results="$test_results $(assert_no_path "$source_root")"
 
-echo "missing_config_file.test.sh\nRESULTS:"
+echo "$script_name\nRESULTS:"
 echo "$(asserts_to_text "$test_results")"
 
 [ -e "$destination" ] && rm -r "$destination"

@@ -1,5 +1,6 @@
 #!/bin/sh
 
+script_name="backup_originating_from_root.test.sh"
 relative_dir="${0%/*}"
 cd $relative_dir
 
@@ -57,7 +58,7 @@ test_results="$test_results $(assert_is_link "$result_dir/latest")"
 has_same_content=$(assert_dirs_equal "$result_dir/latest/$pre_path" "$test_dir/backup_originating_from_root.expected")
 test_results="$test_results $has_same_content"
 
-echo "backup_originating_from_root.test.sh\nRESULTS:"
+echo "$script_name\nRESULTS:"
 echo "$(asserts_to_text "$test_results")"
 
 # clean up

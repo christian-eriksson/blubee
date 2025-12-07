@@ -1,5 +1,6 @@
 #!/bin/sh
 
+script_name="passing_no_config_to_launcher.test.sh"
 relative_dir="${0%/*}"
 cd $relative_dir
 test_dir="$(pwd)"
@@ -34,7 +35,7 @@ test_results="$test_results $(assert_equal_numbers "$backup_json_option_count" 1
 command_count=$(echo "$output" | grep -e "blubee.*$command" | wc -l)
 test_results="$test_results $(assert_equal_numbers "$command_count" 1)"
 
-echo "passing_args_to_blubee.test.sh.test.sh\nRESULTS:"
+echo "$script_name\nRESULTS:"
 echo "$(asserts_to_text "$test_results")"
 
 rm $test_dir/launcher

@@ -1,5 +1,6 @@
 #!/bin/sh
 
+script_name="backup_dry_run.test.sh"
 relative_dir="${0%/*}"
 cd $relative_dir
 
@@ -49,7 +50,7 @@ test_results="$test_results $(assert_no_path "$backup_dir")"
 # AND the original files are untouched
 test_results="$test_results $(assert_dirs_equal "$root_copy" "$root")"
 
-echo "backup_dry_run.test.sh\nRESULTS:"
+echo "$script_name\nRESULTS:"
 echo "$(asserts_to_text "$test_results")"
 
 # clean up

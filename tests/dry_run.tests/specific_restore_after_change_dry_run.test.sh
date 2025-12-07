@@ -1,5 +1,6 @@
 #!/bin/sh
 
+script_name="specific_restore_after_change_dry_run.test.sh"
 relative_dir="${0%/*}"
 cd $relative_dir
 
@@ -81,7 +82,7 @@ test_results="$test_results $(assert_dirs_equal "$source_root" "$test_dir/specif
 test_results="$test_results $(assert_dirs_equal "$destination/$name_one/latest" "$test_dir/specific_restore_after_change_dry_run.expected/backup/$name_one")"
 test_results="$test_results $(assert_dirs_equal "$destination/$name_two/latest" "$test_dir/specific_restore_after_change_dry_run.expected/backup/$name_two")"
 
-echo "specific_restore_after_change_dry_run.test.sh\nRESULTS:"
+echo "$script_name\nRESULTS:"
 echo "$(asserts_to_text "$test_results")"
 
 # clean up

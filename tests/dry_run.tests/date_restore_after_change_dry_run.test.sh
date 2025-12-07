@@ -1,5 +1,6 @@
 #!/bin/sh
 
+script_name="date_restore_after_change_dry_run.test.sh"
 relative_dir="${0%/*}"
 cd $relative_dir
 
@@ -99,7 +100,7 @@ test_results="$test_results $(assert_dirs_equal "$backup_dir/$name/$first_backup
 # AND the second backup is untouched
 test_results="$test_results $(assert_dirs_equal "$backup_dir/$name/latest" "$test_dir/date_restore_after_change_dry_run.expected/backup/second")"
 
-echo "date_restore_after_change_dry_run.test.sh\nRESULTS:"
+echo "$script_name\nRESULTS:"
 echo "$(asserts_to_text "$test_results")"
 
 # clean up
